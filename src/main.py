@@ -14,10 +14,11 @@ def main(args):
     adj_close = df['Adj Close'].values
 
     # Compute stock price returns
-
+    log_returns = np.log(adj_close[1:] / adj_close[:-1])
 
     # Compute mean and standard deviation
-
+    mean = np.mean(log_returns)
+    sigma = np.std(log_returns)
     
     # set up any other simulation parameters
     # construct simulation paths
