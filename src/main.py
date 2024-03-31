@@ -4,13 +4,27 @@ Example use:
     python3 main.py
 """
 
+from pathlib import Path
 import numpy as np
 import pandas as pd
 
+
 def main(args):
-    # load data
-    # compute stock price returns
-    # compute mean and standard deviation
+    # Obtain the absolute path to the current script (main.py)
+    script_dir = Path(__file__).resolve().parent
+
+    # Load data using a relative path to the data file
+    data_path = script_dir / '..' / 'data' / 'ASML.csv'
+    df = pd.read_csv(data_path)
+
+    # Use the adjusted close price to compute log returns
+    adj_close = df['Adj Close'].values
+    log_returns = np.log(adj_close[1:] / adj_close[:-1])
+
+    # Compute mean and standard deviation
+    mean = np.mean(log_returns)
+    sigma = np.std(log_returns)
+    
     # set up any other simulation parameters
     # construct simulation paths
     # analysis and visualisation
