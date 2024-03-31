@@ -7,10 +7,18 @@ Example use:
 import numpy as np
 import pandas as pd
 
+
 def main(args):
-    # load data
-    # compute stock price returns
-    # compute mean and standard deviation
+    # Load data
+    df = pd.read_csv('../data/ASML.csv')
+    adj_close = df['Adj Close'].values
+
+    # Compute stock price returns
+
+
+    # Compute mean and standard deviation
+
+    
     # set up any other simulation parameters
     # construct simulation paths
     # analysis and visualisation
