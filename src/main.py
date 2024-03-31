@@ -4,23 +4,18 @@ Example use:
     python3 main.py
 """
 
-# import statements
-
-# load data
-
-# compute stock price returns
-
-# compute mean and standard deviation
-
-# set up any other simulation parameters
-
-# construct simulation paths
-
-# analysis and visualisation
-
+import numpy as np
+import pandas as pd
 
 def main(args):
+    # load data
+    # compute stock price returns
+    # compute mean and standard deviation
+    # set up any other simulation parameters
+    # construct simulation paths
+    # analysis and visualisation
     pass
+
 
 if __name__ == '__main__':
     # Instantiate the parser
