@@ -25,8 +25,18 @@ def main(args):
     mean = np.mean(log_returns)
     sigma = np.std(log_returns)
     
-    # set up any other simulation parameters
-    # construct simulation paths
+    # Set up any other simulation parameters and variables
+    T = args.days  # number of future days to simulate
+    N = args.iterations  # number of paths to simulate
+    last_adj_close = adj_close[-1]  # last known adjusted close at the time of simulation
+    price_paths = np.zeros((T+1, N))  # pre-allocate numpy array to store simulated paths
+    price_paths[0] = last_adj_close
+
+    # Perform simulation
+    for i in range(1, T+1):
+        random_shocks = np.random.normal(mean, sigma, N)  # one random shock per path
+        price_paths[i] = price_paths[i-1] * np.exp(random_shocks)
+
     # analysis and visualisation
     pass
 
