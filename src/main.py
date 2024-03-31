@@ -25,7 +25,13 @@ def main(args):
     mean = np.mean(log_returns)
     sigma = np.std(log_returns)
     
-    # set up any other simulation parameters
+    # Set up any other simulation parameters and variables
+    T = args.days  # number of future days to simulate
+    N = args.iterations  # number of paths to simulate
+    last_adj_close = adj_close[-1]  # last known adjusted close at the time of simulation
+    price_paths = np.zeros((T+1, N))  # pre-allocate numpy array to store simulated paths
+    price_paths[0] = last_adj_close
+
     # construct simulation paths
     # analysis and visualisation
     pass
