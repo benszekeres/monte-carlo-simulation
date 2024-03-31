@@ -32,7 +32,11 @@ def main(args):
     price_paths = np.zeros((T+1, N))  # pre-allocate numpy array to store simulated paths
     price_paths[0] = last_adj_close
 
-    # construct simulation paths
+    # Perform simulation
+    for i in range(1, T+1):
+        random_shocks = np.random.normal(mean, sigma, N)  # one random shock per path
+        price_paths[i] = price_paths[i-1] * np.exp(random_shocks)
+
     # analysis and visualisation
     pass
 
