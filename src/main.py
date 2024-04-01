@@ -5,6 +5,7 @@ Example use:
 """
 
 from pathlib import Path
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -33,12 +34,14 @@ def main(args):
     price_paths[0] = last_adj_close
 
     # Perform simulation
-    for i in range(1, T+1):
+    for t in range(1, T+1):
         random_shocks = np.random.normal(mean, sigma, N)  # one random shock per path
-        price_paths[i] = price_paths[i-1] * np.exp(random_shocks)
+        price_paths[t] = price_paths[t-1] * np.exp(random_shocks)
 
-    # analysis and visualisation
-    pass
+    # Visualise each price path over time
+    days = np.arange(T+1)  # x-axis 
+    for path_idx in range(price_paths.shape[1]):  # price_paths has shape (T+1, N)
+        plt.plot(days, price_paths[:, path_idx], linewidth=0.5, alpha=0.2)
 
 
 if __name__ == '__main__':
