@@ -42,6 +42,12 @@ def main(args):
     days = np.arange(T+1)  # x-axis 
     for path_idx in range(price_paths.shape[1]):  # price_paths has shape (T+1, N)
         plt.plot(days, price_paths[:, path_idx], linewidth=0.5, alpha=0.2)
+    
+    # Format plot
+    plt.title('Monte Carlo Simulation of ASML Share Price')
+    plt.xlabel('Days into the Future')
+    plt.ylabel('Share Price')
+    plt.show()
 
 
 if __name__ == '__main__':
