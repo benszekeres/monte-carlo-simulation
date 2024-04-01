@@ -47,6 +47,7 @@ def main(args):
     plt.title('Monte Carlo Simulation of ASML Share Price')
     plt.xlabel('Days into the Future')
     plt.ylabel('Share Price')
+    plt.xlim(left=days[0], right=days[-1])
     
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths.png'
