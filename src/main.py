@@ -46,14 +46,15 @@ def main(args):
     # Visualise summary statistics
     days = np.arange(T+1)  # x-axis 
 
-    plt.plot(days, mean_prices, linewidth=1.5, alpha=1)
-    plt.plot(days, pct_25, linewidth=1.5, alpha=1)
-    plt.plot(days, pct_75, linewidth=1.5, alpha=1)
+    plt.plot(days, pct_75, linewidth=1.5, alpha=1, label='75th percentile')
+    plt.plot(days, mean_prices, linewidth=1.5, alpha=1, label='Mean')
+    plt.plot(days, pct_25, linewidth=1.5, alpha=1, label='25th percentile')
     plt.xlim(left=days[0], right=days[-1])
 
     plt.title('ASML Simulated Share Price Paths')
     plt.xlabel('Days into the Future')
     plt.ylabel('Share Price')
+    plt.legend()
 
     # Save plot in the repository's home directory then display
     fig_savepath = script_dir / '..' / 'price_paths.png'
