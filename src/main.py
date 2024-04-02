@@ -54,6 +54,7 @@ def main(args):
     plt.plot(days, mean_prices, linewidth=1.5, alpha=1, label='Mean')
     plt.plot(days, pct_25, linewidth=1.5, alpha=1, label='25th percentile')
     plt.xlim(left=days[0], right=days[-1])
+    plt.ylim(bottom=0)
 
     plt.title('ASML Simulated Share Price Paths')
     plt.xlabel('Days into the Future')
@@ -64,6 +65,7 @@ def main(args):
     fig_savepath = script_dir / '..' / 'price_paths.png'
     plt.savefig(fig_savepath)
     plt.show()
+    plt.clf()
     
 
 if __name__ == '__main__':
