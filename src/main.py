@@ -10,6 +10,10 @@ import numpy as np
 import pandas as pd
 
 
+# Define and apply global constants for the sizes of plots
+FIG_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
+plt.rcParams['figure.figsize'] = FIG_SIZE
+
 def main(args):
     # Obtain the absolute path to the current script (main.py)
     script_dir = Path(__file__).resolve().parent
@@ -38,23 +42,31 @@ def main(args):
         random_shocks = np.random.normal(mean, sigma, N)  # one random shock per path
         price_paths[t] = price_paths[t-1] * np.exp(random_shocks)
 
-    # Visualise each price path over time
+    # Compute summary statistics
+    mean_prices = np.mean(price_paths, axis=1)  # has shape T+1 i.e. mean price per day
+    pct_25 = np.percentile(price_paths, q=25, axis=1)
+    pct_75 = np.percentile(price_paths, q=75, axis=1)
+
+    # Visualise summary statistics
     days = np.arange(T+1)  # x-axis 
-    for path_idx in range(price_paths.shape[1]):  # price_paths has shape (T+1, N)
-        plt.plot(days, price_paths[:, path_idx], linewidth=0.5, alpha=0.2)
-    
-    # Format plot
-    plt.title('Monte Carlo Simulation of ASML Share Price')
+
+    plt.plot(days, pct_75, linewidth=1.5, alpha=1, label='75th percentile')
+    plt.plot(days, mean_prices, linewidth=1.5, alpha=1, label='Mean')
+    plt.plot(days, pct_25, linewidth=1.5, alpha=1, label='25th percentile')
+    plt.xlim(left=days[0], right=days[-1])
+    plt.ylim(bottom=0)
+
+    plt.title('ASML Simulated Share Price Paths')
     plt.xlabel('Days into the Future')
     plt.ylabel('Share Price')
-    plt.xlim(left=days[0], right=days[-1])
-    
-    # Save plot in the repository's home directory
+    plt.legend()
+
+    # Save plot in the repository's home directory then display
     fig_savepath = script_dir / '..' / 'price_paths.png'
     plt.savefig(fig_savepath)
     plt.show()
     plt.clf()
-
+    
 
 if __name__ == '__main__':
     # Instantiate the parser
