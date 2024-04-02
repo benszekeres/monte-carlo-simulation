@@ -68,7 +68,7 @@ def main(args):
 
     # Set labels and legend
     plt.title('ASML Simulated Share Price Paths')
-    plt.xlabel('Days into the Future')
+    ax1.set_xlabel('Days into the Future')
     ax1.set_ylabel('Share Price')
     ax1.legend(loc='upper left')
 
