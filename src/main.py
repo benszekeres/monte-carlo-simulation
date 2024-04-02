@@ -44,8 +44,10 @@ def main(args):
 
     # Compute summary statistics
     mean_prices = np.mean(price_paths, axis=1)  # has shape T+1 i.e. mean price per day
+    pct_10 = np.percentile(price_paths, q=10, axis=1)
     pct_25 = np.percentile(price_paths, q=25, axis=1)
     pct_75 = np.percentile(price_paths, q=75, axis=1)
+    pct_90 = np.percentile(price_paths, q=90, axis=1)
 
     # Visualise summary statistics
     days = np.arange(T+1)  # x-axis 
@@ -54,17 +56,24 @@ def main(args):
     plt.plot(days, mean_prices, linewidth=1.5, alpha=1, label='Mean')
     plt.plot(days, pct_25, linewidth=1.5, alpha=1, label='25th percentile')
     plt.xlim(left=days[0], right=days[-1])
-    plt.ylim(bottom=0)
+    plt.ylim(bottom=0, top=pct_90[-1])
 
     plt.title('ASML Simulated Share Price Paths')
     plt.xlabel('Days into the Future')
     plt.ylabel('Share Price')
-    plt.legend()
+    plt.legend(loc='upper left')
 
-    # Save plot in the repository's home directory then display
+    # Save basic plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths.png'
     plt.savefig(fig_savepath)
-    plt.show()
+
+    # Add shading for upper and lower bounds
+    plt.fill_between(days, pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+    plt.legend(loc='upper left')
+
+    # Save updated plot
+    fig_savepath = script_dir / '..' / 'price_paths_shaded.png'
+    plt.savefig(fig_savepath)
     plt.clf()
     
 
