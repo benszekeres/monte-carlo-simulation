@@ -55,25 +55,27 @@ def main(args):
     plt.plot(days, pct_75, linewidth=1.5, alpha=1, label='75th percentile')
     plt.plot(days, mean_prices, linewidth=1.5, alpha=1, label='Mean')
     plt.plot(days, pct_25, linewidth=1.5, alpha=1, label='25th percentile')
+    plt.fill_between(days, pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+
+    # Configure axes' limits
     plt.xlim(left=days[0], right=days[-1])
     plt.ylim(bottom=0, top=pct_90[-1])
 
+    # Add secondary axis
+    ax1 = plt.gca()
+    ax2 = ax1.twinx()
+    ax2.set_ylim(ax1.get_ylim())
+
+    # Set labels and legend
     plt.title('ASML Simulated Share Price Paths')
     plt.xlabel('Days into the Future')
-    plt.ylabel('Share Price')
-    plt.legend(loc='upper left')
+    ax1.set_ylabel('Share Price')
+    ax1.legend(loc='upper left')
 
-    # Save basic plot in the repository's home directory
-    fig_savepath = script_dir / '..' / 'price_paths.png'
-    plt.savefig(fig_savepath)
-
-    # Add shading for upper and lower bounds
-    plt.fill_between(days, pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
-    plt.legend(loc='upper left')
-
-    # Save updated plot
+    # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths_shaded.png'
     plt.savefig(fig_savepath)
+    plt.show()
     plt.clf()
     
 
