@@ -10,6 +10,10 @@ import numpy as np
 import pandas as pd
 
 
+# Define and apply global constants for the sizes of plots
+FIG_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
+plt.rcParams['figure.figsize'] = FIG_SIZE
+
 def main(args):
     # Obtain the absolute path to the current script (main.py)
     script_dir = Path(__file__).resolve().parent
