@@ -6,6 +6,7 @@ Example use:
 
 from pathlib import Path
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import numpy as np
 import pandas as pd
 
@@ -74,6 +75,25 @@ def main(args):
 
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths_shaded.png'
+    plt.savefig(fig_savepath)
+    # plt.show()
+    plt.clf()
+
+    # Add histogram of final prices
+    num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
+    plt.hist(price_paths[-1], bins=num_bins, alpha=0.8, edgecolor='black', linewidth=1)
+    plt.title('Distribution of Simulated Share Prices on Final Day')
+    plt.xlabel('Share Price')
+    plt.ylabel('Frequency')
+
+    # Adjust x-axis tick frequency
+    ax = plt.gca()
+    ticker_frequency = max(price_paths[-1]) / 10  # ensure ten ticks regardless of values
+    ticker_frequency_rounded = round(ticker_frequency, -int(np.floor(np.log10(ticker_frequency)))) # Rounds to nearest power of 10
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(ticker_frequency_rounded))
+
+    # Save plot in the repository's home directory
+    fig_savepath = script_dir / '..' / 'histogram_final_prices.png'
     plt.savefig(fig_savepath)
     plt.show()
     plt.clf()
