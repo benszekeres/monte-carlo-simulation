@@ -75,14 +75,18 @@ def main(args):
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths_shaded.png'
     plt.savefig(fig_savepath)
-    plt.show()
+    # plt.show()
     plt.clf()
 
     # Add histogram of final prices
-    plt.hist(price_paths[-1], bins=50, alpha=0.75)
+    num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
+    plt.hist(price_paths[-1], bins=num_bins, alpha=0.75)
     plt.title('Distribution of Simulated Share Prices on Final Day')
     plt.xlabel('Share Price')
     plt.ylabel('Frequency')
+
+    # Save plot in the repository's home directory
+    fig_savepath = script_dir / '..' / 'histogram_final_prices.png'
     plt.show()
     plt.clf()
     
