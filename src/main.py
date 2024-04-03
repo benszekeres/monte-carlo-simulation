@@ -77,6 +77,14 @@ def main(args):
     plt.savefig(fig_savepath)
     plt.show()
     plt.clf()
+
+    # Add histogram of final prices
+    plt.hist(price_paths[-1], bins=50, alpha=0.75)
+    plt.title('Distribution of Simulated Share Prices on Final Day')
+    plt.xlabel('Share Price')
+    plt.ylabel('Frequency')
+    plt.show()
+    plt.clf()
     
 
 if __name__ == '__main__':
