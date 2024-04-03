@@ -80,13 +80,14 @@ def main(args):
 
     # Add histogram of final prices
     num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
-    plt.hist(price_paths[-1], bins=num_bins, alpha=0.75)
+    plt.hist(price_paths[-1], bins=num_bins, alpha=0.8, edgecolor='black', linewidth=1)
     plt.title('Distribution of Simulated Share Prices on Final Day')
     plt.xlabel('Share Price')
     plt.ylabel('Frequency')
 
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'histogram_final_prices.png'
+    plt.savefig(fig_savepath)
     plt.show()
     plt.clf()
     
