@@ -79,6 +79,19 @@ def main(args):
     # plt.show()
     plt.clf()
 
+    # Add plot also showing historical share price
+    historical_days = np.arange(len(adj_close))
+    combined_days = np.concatenate((historical_days, days + historical_days[-1]))  # extend x-axis
+
+    # Plot both historical and simulated data on (different portions of) the same axis
+    plt.plot(historical_days, adj_close, label='Historical Share Price')
+    plt.plot(combined_days[len(historical_days):], pct_75, linewidth=1.5, alpha=1, label='75th percentile')
+    plt.plot(combined_days[len(historical_days):], mean_prices, linewidth=1.5, alpha=1, label='Mean')
+    plt.plot(combined_days[len(historical_days):], pct_25, linewidth=1.5, alpha=1, label='25th percentile')
+    plt.fill_between(combined_days[len(historical_days):], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+    plt.show()
+    plt.clf()
+
     # Add histogram of final prices
     num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
     plt.hist(price_paths[-1], bins=num_bins, alpha=0.8, edgecolor='black', linewidth=1)
