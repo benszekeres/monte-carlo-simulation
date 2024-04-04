@@ -90,9 +90,22 @@ def main(args):
     plt.plot(combined_days[max_history:], mean_prices, linewidth=1.5, alpha=1, label='Mean')
     plt.plot(combined_days[max_history:], pct_25, linewidth=1.5, alpha=1, label='25th percentile')
     plt.fill_between(combined_days[max_history:], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+
+    # Configure axes' limits
+    plt.xlim(left=combined_days[0], right=combined_days[-1])
+    plt.ylim(bottom=0, top=pct_90[-1])
+
+    # Add secondary axis
+    ax1 = plt.gca()
+    ax2 = ax1.twinx()
+    ax2.set_ylim(ax1.get_ylim())
+
+    # Save plot in the repository's home directory
+    fig_savepath = script_dir / '..' / 'price_paths_with_history.png'
+    plt.savefig(fig_savepath)
     plt.show()
     plt.clf()
-
+    
     # Add histogram of final prices
     num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
     plt.hist(price_paths[-1], bins=num_bins, alpha=0.8, edgecolor='black', linewidth=1)
