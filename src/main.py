@@ -56,9 +56,9 @@ def main(args):
     # Visualise summary statistics
     days = np.arange(T+1)  # x-axis 
 
-    plt.plot(days, pct_75, linewidth=1.5, alpha=1, label='75th percentile')
-    plt.plot(days, mean_prices, linewidth=1.5, alpha=1, label='Mean')
-    plt.plot(days, pct_25, linewidth=1.5, alpha=1, label='25th percentile')
+    plt.plot(days, pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
+    plt.plot(days, mean_prices, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
+    plt.plot(days, pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
     plt.fill_between(days, pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
 
     # Configure axes' limits
@@ -79,7 +79,7 @@ def main(args):
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths_shaded.png'
     plt.savefig(fig_savepath)
-    # plt.show()
+    plt.show()
     plt.clf()
 
     # Add plot also showing historical share price
@@ -90,10 +90,10 @@ def main(args):
     combined_dates = np.concatenate((dates_axis, simulation_dates))
 
     # Plot both historical and simulated data on (different portions of) the same axis
-    plt.plot(combined_dates[:max_history], adj_close[-max_history:], label='Historical Share Price')
-    plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, label='75th percentile')
-    plt.plot(combined_dates[max_history:], mean_prices, linewidth=1.5, alpha=1, label='Mean')
-    plt.plot(combined_dates[max_history:], pct_25, linewidth=1.5, alpha=1, label='25th percentile')
+    plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
+    plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
+    plt.plot(combined_dates[max_history:], mean_prices, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
+    plt.plot(combined_dates[max_history:], pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
     plt.fill_between(combined_dates[max_history:], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
 
     # Configure axes' limits
