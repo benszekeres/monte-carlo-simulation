@@ -80,15 +80,16 @@ def main(args):
     plt.clf()
 
     # Add plot also showing historical share price
-    historical_days = np.arange(len(adj_close))
+    max_history = min(len(adj_close), (T+1)*3)  # avoid too much historical data
+    historical_days = np.arange(max_history)
     combined_days = np.concatenate((historical_days, days + historical_days[-1]))  # extend x-axis
 
     # Plot both historical and simulated data on (different portions of) the same axis
-    plt.plot(historical_days, adj_close, label='Historical Share Price')
-    plt.plot(combined_days[len(historical_days):], pct_75, linewidth=1.5, alpha=1, label='75th percentile')
-    plt.plot(combined_days[len(historical_days):], mean_prices, linewidth=1.5, alpha=1, label='Mean')
-    plt.plot(combined_days[len(historical_days):], pct_25, linewidth=1.5, alpha=1, label='25th percentile')
-    plt.fill_between(combined_days[len(historical_days):], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+    plt.plot(combined_days[:max_history], adj_close[-max_history:], label='Historical Share Price')
+    plt.plot(combined_days[max_history:], pct_75, linewidth=1.5, alpha=1, label='75th percentile')
+    plt.plot(combined_days[max_history:], mean_prices, linewidth=1.5, alpha=1, label='Mean')
+    plt.plot(combined_days[max_history:], pct_25, linewidth=1.5, alpha=1, label='25th percentile')
+    plt.fill_between(combined_days[max_history:], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
     plt.show()
     plt.clf()
 
