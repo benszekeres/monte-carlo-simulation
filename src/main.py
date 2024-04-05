@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 
 # Define and apply global constants for the sizes of plots
@@ -135,6 +136,15 @@ def main(args):
     plt.savefig(fig_savepath)
     plt.show()
     plt.clf()
+
+    # Add box plot of prices at given five evenly spaced time points
+    time_points = [price_paths[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
+    sns.boxplot(data=time_points)
+    plt.title('Box Plot of Simulated Share Prices at Selected Time Points')
+    plt.xlabel('Time Point')  # make concrete date
+    plt.ylabel('Share Price')
+    plt.xticks(ticks=range(4), labels=['Box1', 'Box2', 'Box3', 'Box4'])
+    plt.show()
     
 
 if __name__ == '__main__':
