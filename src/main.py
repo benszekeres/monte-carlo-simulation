@@ -145,6 +145,8 @@ def main(args):
     month_ends = [tp_date.to_period('M').to_timestamp(how='end').date().strftime('%Y/%m/%d')
                    for tp_date in tp_dates]  # nearest month ends
     
+    month_ends[-1] = f'{month_ends[-1]} (Final)'
+    
     sns.boxplot(data=tp_prices)
     plt.title('Box Plot of Simulated Share Prices at Selected Time Points')
     plt.xlabel('Nearest Month End')
