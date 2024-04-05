@@ -80,7 +80,7 @@ def main(args):
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths_shaded.png'
     plt.savefig(fig_savepath)
-    plt.show()
+    # plt.show()
     plt.clf()
 
     # Add plot also showing historical share price
@@ -115,7 +115,7 @@ def main(args):
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths_with_history.png'
     plt.savefig(fig_savepath)
-    plt.show()
+    # plt.show()
     plt.clf()
     
     # Add histogram of final prices
@@ -134,16 +134,21 @@ def main(args):
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'histogram_final_prices.png'
     plt.savefig(fig_savepath)
-    plt.show()
+    # plt.show()
     plt.clf()
 
     # Add box plot of prices at given five evenly spaced time points
-    time_points = [price_paths[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
-    sns.boxplot(data=time_points)
+    tp_prices = [price_paths[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
+    tp_dates = [simulation_dates[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
+
+    # Convert dates to nearest month-end
+    month_ends = [tp_date.to_period('M').to_timestamp(how='end').date() for tp_date in tp_dates]  # nearest month ends
+
+    sns.boxplot(data=tp_prices)
     plt.title('Box Plot of Simulated Share Prices at Selected Time Points')
-    plt.xlabel('Time Point')  # make concrete date
+    plt.xlabel('Time Point')
     plt.ylabel('Share Price')
-    plt.xticks(ticks=range(4), labels=['Box1', 'Box2', 'Box3', 'Box4'])
+    plt.xticks(ticks=range(4), labels=month_ends)
     plt.show()
     
 
