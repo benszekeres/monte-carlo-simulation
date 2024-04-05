@@ -80,7 +80,7 @@ def main(args):
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths_shaded.png'
     plt.savefig(fig_savepath)
-    # plt.show()
+    plt.show()
     plt.clf()
 
     # Add plot also showing historical share price
@@ -115,7 +115,7 @@ def main(args):
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'price_paths_with_history.png'
     plt.savefig(fig_savepath)
-    # plt.show()
+    plt.show()
     plt.clf()
     
     # Add histogram of final prices
@@ -134,7 +134,7 @@ def main(args):
     # Save plot in the repository's home directory
     fig_savepath = script_dir / '..' / 'histogram_final_prices.png'
     plt.savefig(fig_savepath)
-    # plt.show()
+    plt.show()
     plt.clf()
 
     # Add box plot of prices at given five evenly spaced time points
@@ -150,7 +150,12 @@ def main(args):
     plt.xlabel('Nearest Month End')
     plt.ylabel('Share Price')
     plt.xticks(ticks=range(4), labels=month_ends)
+
+    # Save plot in the repository's home directory
+    fig_savepath = script_dir / '..' / 'box_plot.png'
+    plt.savefig(fig_savepath)
     plt.show()
+    plt.clf()
     
 
 if __name__ == '__main__':
