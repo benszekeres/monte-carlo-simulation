@@ -79,6 +79,7 @@ def plot_histogram(price_paths, N, base_dir):
     """Docstring to follow.
     """
     num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
+
     plt.hist(price_paths[-1], bins=num_bins, alpha=0.8, edgecolor='black', linewidth=1)
     plt.title('Distribution of Simulated Share Prices on Final Day')
     plt.xlabel('Share Price')
@@ -99,12 +100,15 @@ def plot_histogram(price_paths, N, base_dir):
 def plot_box(price_paths, simulation_dates, T, base_dir):
     """Docstring to follow.
     """
+    # Compute time point prices and dates
     tp_prices = [price_paths[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
     tp_dates = [simulation_dates[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
+
     # Convert dates to nearest month-end
     month_ends = [tp_date.to_period('M').to_timestamp(how='end').date().strftime('%Y/%m/%d')
                    for tp_date in tp_dates]  # nearest month ends
     month_ends[-1] = f'{month_ends[-1]} (Final)'
+    
     sns.boxplot(data=tp_prices)
     plt.title('Box Plot of Simulated Share Prices at Selected Time Points')
     plt.xlabel('Nearest Month End')
