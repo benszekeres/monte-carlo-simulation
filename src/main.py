@@ -16,6 +16,112 @@ import seaborn as sns
 FIG_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
 plt.rcParams['figure.figsize'] = FIG_SIZE
 
+def plot_price_paths(days, pct_10, pct_25, mean, pct_75, pct_90, base_dir):
+    """Docstring to follow.
+    """
+    plt.plot(days, pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
+    plt.plot(days, mean, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
+    plt.plot(days, pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
+    plt.fill_between(days, pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+
+    # Configure axes' limits
+    plt.xlim(left=days[0], right=days[-1])
+    plt.ylim(bottom=0, top=pct_90[-1])
+
+    # Add secondary axis
+    ax1 = plt.gca()
+    ax2 = ax1.twinx()
+    ax2.set_ylim(ax1.get_ylim())
+
+    # Set labels and legend
+    plt.title('ASML Simulated Share Price Paths')
+    ax1.set_xlabel('Days into the Future')
+    ax1.set_ylabel('Share Price')
+    ax1.legend(loc='upper left')
+
+    # Save plot in the repository's home directory
+    fig_savepath = base_dir / '..' / 'price_paths_shaded.png'
+    plt.savefig(fig_savepath)
+    plt.show()
+    plt.clf()
+
+def plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10, pct_25, mean, pct_75, pct_90, base_dir):
+    """Docstring to follow.
+    """
+    plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
+    plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
+    plt.plot(combined_dates[max_history:], mean, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
+    plt.plot(combined_dates[max_history:], pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
+    plt.fill_between(combined_dates[max_history:], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+
+    # Configure axes' limits
+    plt.xlim(left=combined_dates[0], right=combined_dates[-1])
+    plt.ylim(bottom=0, top=pct_90[-1])
+
+    # Add secondary axis
+    ax1 = plt.gca()
+    ax2 = ax1.twinx()
+    ax2.set_ylim(ax1.get_ylim())
+
+    # Set labels and legend
+    plt.title('ASML Share Prices: Historical & Simulated')
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel('Share Price')
+    ax1.legend(loc='upper left')
+
+    # Save plot in the repository's home directory
+    fig_savepath = base_dir / '..' / 'price_paths_with_history.png'
+    plt.savefig(fig_savepath)
+    plt.show()
+    plt.clf()
+
+def plot_histogram(price_paths, N, base_dir):
+    """Docstring to follow.
+    """
+    num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
+
+    plt.hist(price_paths[-1], bins=num_bins, alpha=0.8, edgecolor='black', linewidth=1)
+    plt.title('Distribution of Simulated Share Prices on Final Day')
+    plt.xlabel('Share Price')
+    plt.ylabel('Frequency')
+
+    # Adjust x-axis tick frequency
+    ax = plt.gca()
+    ticker_frequency = max(price_paths[-1]) / 10  # ensure ten ticks regardless of values
+    ticker_frequency_rounded = round(ticker_frequency, -int(np.floor(np.log10(ticker_frequency)))) # Rounds to nearest power of 10
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(ticker_frequency_rounded))
+
+    # Save plot in the repository's home directory
+    fig_savepath = base_dir / '..' / 'histogram_final_prices.png'
+    plt.savefig(fig_savepath)
+    plt.show()
+    plt.clf()
+
+def plot_box(price_paths, simulation_dates, T, base_dir):
+    """Docstring to follow.
+    """
+    # Compute time point prices and dates
+    tp_prices = [price_paths[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
+    tp_dates = [simulation_dates[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
+
+    # Convert dates to nearest month-end
+    month_ends = [tp_date.to_period('M').to_timestamp(how='end').date().strftime('%Y/%m/%d')
+                   for tp_date in tp_dates]  # nearest month ends
+    month_ends[-1] = f'{month_ends[-1]} (Final)'
+    
+    sns.boxplot(data=tp_prices)
+    plt.title('Box Plot of Simulated Share Prices at Selected Time Points')
+    plt.xlabel('Nearest Month End')
+    plt.ylabel('Share Price')
+    plt.xticks(ticks=range(4), labels=month_ends)
+
+    # Save plot in the repository's home directory
+    fig_savepath = base_dir / '..' / 'box_plot.png'
+    plt.savefig(fig_savepath)
+    plt.show()
+    plt.clf()
+
+
 def main(args):
     # Obtain the absolute path to the current script (main.py)
     script_dir = Path(__file__).resolve().parent
@@ -54,111 +160,25 @@ def main(args):
     pct_75 = np.percentile(price_paths, q=75, axis=1)
     pct_90 = np.percentile(price_paths, q=90, axis=1)
 
-    # Visualise summary statistics
-    days = np.arange(T+1)  # x-axis 
-
-    plt.plot(days, pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
-    plt.plot(days, mean_prices, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
-    plt.plot(days, pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
-    plt.fill_between(days, pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
-
-    # Configure axes' limits
-    plt.xlim(left=days[0], right=days[-1])
-    plt.ylim(bottom=0, top=pct_90[-1])
-
-    # Add secondary axis
-    ax1 = plt.gca()
-    ax2 = ax1.twinx()
-    ax2.set_ylim(ax1.get_ylim())
-
-    # Set labels and legend
-    plt.title('ASML Simulated Share Price Paths')
-    ax1.set_xlabel('Days into the Future')
-    ax1.set_ylabel('Share Price')
-    ax1.legend(loc='upper left')
-
-    # Save plot in the repository's home directory
-    fig_savepath = script_dir / '..' / 'price_paths_shaded.png'
-    plt.savefig(fig_savepath)
-    plt.show()
-    plt.clf()
-
-    # Add plot also showing historical share price
+    # Compute necessary date variables for plotting
+    days = np.arange(T+1)  # x-axis
     max_history = min(len(adj_close), (T+1)*3)  # avoid too much historical data
     dates_axis = dates[-max_history:]
-    # Combine historical and simulation horizon dates
     simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=T+1, freq='D')
-    combined_dates = np.concatenate((dates_axis, simulation_dates))
+    combined_dates = np.concatenate((dates_axis, simulation_dates))  # combine historical and simulation horizon dates
 
-    # Plot both historical and simulated data on (different portions of) the same axis
-    plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
-    plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
-    plt.plot(combined_dates[max_history:], mean_prices, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
-    plt.plot(combined_dates[max_history:], pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
-    plt.fill_between(combined_dates[max_history:], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+    # Plot simulated price paths including an 80% confidence interval
+    plot_price_paths(days, pct_10, pct_25, mean_prices, pct_75, pct_90, base_dir=script_dir)
 
-    # Configure axes' limits
-    plt.xlim(left=combined_dates[0], right=combined_dates[-1])
-    plt.ylim(bottom=0, top=pct_90[-1])
-
-    # Add secondary axis
-    ax1 = plt.gca()
-    ax2 = ax1.twinx()
-    ax2.set_ylim(ax1.get_ylim())
-
-    # Set labels and legend
-    plt.title('ASML Share Prices: Historical & Simulated')
-    ax1.set_xlabel('Date')
-    ax1.set_ylabel('Share Price')
-    ax1.legend(loc='upper left')
-
-    # Save plot in the repository's home directory
-    fig_savepath = script_dir / '..' / 'price_paths_with_history.png'
-    plt.savefig(fig_savepath)
-    plt.show()
-    plt.clf()
+    # Plot both historical share price and simulated price paths
+    plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10, pct_25, mean_prices, pct_75, pct_90, base_dir=script_dir)
     
-    # Add histogram of final prices
-    num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
-    plt.hist(price_paths[-1], bins=num_bins, alpha=0.8, edgecolor='black', linewidth=1)
-    plt.title('Distribution of Simulated Share Prices on Final Day')
-    plt.xlabel('Share Price')
-    plt.ylabel('Frequency')
-
-    # Adjust x-axis tick frequency
-    ax = plt.gca()
-    ticker_frequency = max(price_paths[-1]) / 10  # ensure ten ticks regardless of values
-    ticker_frequency_rounded = round(ticker_frequency, -int(np.floor(np.log10(ticker_frequency)))) # Rounds to nearest power of 10
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(ticker_frequency_rounded))
-
-    # Save plot in the repository's home directory
-    fig_savepath = script_dir / '..' / 'histogram_final_prices.png'
-    plt.savefig(fig_savepath)
-    plt.show()
-    plt.clf()
+    # Plot histogram of final prices
+    plot_histogram(price_paths, N, base_dir=script_dir)
 
     # Add box plot of prices at given five evenly spaced time points
-    tp_prices = [price_paths[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
-    tp_dates = [simulation_dates[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
+    plot_box(price_paths, simulation_dates, T, base_dir=script_dir)
 
-    # Convert dates to nearest month-end
-    month_ends = [tp_date.to_period('M').to_timestamp(how='end').date().strftime('%Y/%m/%d')
-                   for tp_date in tp_dates]  # nearest month ends
-    
-    month_ends[-1] = f'{month_ends[-1]} (Final)'
-    
-    sns.boxplot(data=tp_prices)
-    plt.title('Box Plot of Simulated Share Prices at Selected Time Points')
-    plt.xlabel('Nearest Month End')
-    plt.ylabel('Share Price')
-    plt.xticks(ticks=range(4), labels=month_ends)
-
-    # Save plot in the repository's home directory
-    fig_savepath = script_dir / '..' / 'box_plot.png'
-    plt.savefig(fig_savepath)
-    plt.show()
-    plt.clf()
-    
 
 if __name__ == '__main__':
     # Instantiate the parser
