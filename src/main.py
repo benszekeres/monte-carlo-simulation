@@ -156,17 +156,15 @@ def main(args):
     pct_75 = np.percentile(price_paths, q=75, axis=1)
     pct_90 = np.percentile(price_paths, q=90, axis=1)
 
+    # Compute necessary date variables for plotting
     days = np.arange(T+1)  # x-axis
+    max_history = min(len(adj_close), (T+1)*3)  # avoid too much historical data
+    dates_axis = dates[-max_history:]
+    simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=T+1, freq='D')
+    combined_dates = np.concatenate((dates_axis, simulation_dates))  # combine historical and simulation horizon dates
 
     # Plot simulated price paths including an 80% confidence interval
     plot_price_paths(days, pct_10, pct_25, mean_prices, pct_75, pct_90, base_dir=script_dir)
-
-    # Add plot also showing historical share price
-    max_history = min(len(adj_close), (T+1)*3)  # avoid too much historical data
-    dates_axis = dates[-max_history:]
-    # Combine historical and simulation horizon dates
-    simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=T+1, freq='D')
-    combined_dates = np.concatenate((dates_axis, simulation_dates))
 
     # Plot both historical share price and simulated price paths
     plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10, pct_25, mean_prices, pct_75, pct_90, base_dir=script_dir)
