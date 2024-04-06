@@ -43,6 +43,34 @@ def plot_price_paths(days, pct_10, pct_25, mean, pct_75, pct_90, base_dir):
     plt.show()
     plt.clf()
 
+def plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10, pct_25, mean, pct_75, pct_90, base_dir):
+    plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
+    plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
+    plt.plot(combined_dates[max_history:], mean, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
+    plt.plot(combined_dates[max_history:], pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
+    plt.fill_between(combined_dates[max_history:], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+
+    # Configure axes' limits
+    plt.xlim(left=combined_dates[0], right=combined_dates[-1])
+    plt.ylim(bottom=0, top=pct_90[-1])
+
+    # Add secondary axis
+    ax1 = plt.gca()
+    ax2 = ax1.twinx()
+    ax2.set_ylim(ax1.get_ylim())
+
+    # Set labels and legend
+    plt.title('ASML Share Prices: Historical & Simulated')
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel('Share Price')
+    ax1.legend(loc='upper left')
+
+    # Save plot in the repository's home directory
+    fig_savepath = base_dir / '..' / 'price_paths_with_history.png'
+    plt.savefig(fig_savepath)
+    plt.show()
+    plt.clf()
+
 
 def main(args):
     # Obtain the absolute path to the current script (main.py)
@@ -84,6 +112,7 @@ def main(args):
 
     days = np.arange(T+1)  # x-axis
 
+    # Plot simulated price paths including an 80% confidence interval
     plot_price_paths(days, pct_10, pct_25, mean_prices, pct_75, pct_90, base_dir=script_dir)
 
     # Add plot also showing historical share price
@@ -93,33 +122,8 @@ def main(args):
     simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=T+1, freq='D')
     combined_dates = np.concatenate((dates_axis, simulation_dates))
 
-    # Plot both historical and simulated data on (different portions of) the same axis
-    plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
-    plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
-    plt.plot(combined_dates[max_history:], mean_prices, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
-    plt.plot(combined_dates[max_history:], pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
-    plt.fill_between(combined_dates[max_history:], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
-
-    # Configure axes' limits
-    plt.xlim(left=combined_dates[0], right=combined_dates[-1])
-    plt.ylim(bottom=0, top=pct_90[-1])
-
-    # Add secondary axis
-    ax1 = plt.gca()
-    ax2 = ax1.twinx()
-    ax2.set_ylim(ax1.get_ylim())
-
-    # Set labels and legend
-    plt.title('ASML Share Prices: Historical & Simulated')
-    ax1.set_xlabel('Date')
-    ax1.set_ylabel('Share Price')
-    ax1.legend(loc='upper left')
-
-    # Save plot in the repository's home directory
-    fig_savepath = script_dir / '..' / 'price_paths_with_history.png'
-    plt.savefig(fig_savepath)
-    plt.show()
-    plt.clf()
+    # Plot both historical share price and simulated price paths
+    plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10, pct_25, mean_prices, pct_75, pct_90, base_dir=script_dir)
     
     # Add histogram of final prices
     num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
