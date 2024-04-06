@@ -16,6 +16,34 @@ import seaborn as sns
 FIG_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
 plt.rcParams['figure.figsize'] = FIG_SIZE
 
+def plot_price_paths(days, pct_10, pct_25, mean, pct_75, pct_90, base_dir):
+    plt.plot(days, pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
+    plt.plot(days, mean, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
+    plt.plot(days, pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
+    plt.fill_between(days, pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+
+    # Configure axes' limits
+    plt.xlim(left=days[0], right=days[-1])
+    plt.ylim(bottom=0, top=pct_90[-1])
+
+    # Add secondary axis
+    ax1 = plt.gca()
+    ax2 = ax1.twinx()
+    ax2.set_ylim(ax1.get_ylim())
+
+    # Set labels and legend
+    plt.title('ASML Simulated Share Price Paths')
+    ax1.set_xlabel('Days into the Future')
+    ax1.set_ylabel('Share Price')
+    ax1.legend(loc='upper left')
+
+    # Save plot in the repository's home directory
+    fig_savepath = base_dir / '..' / 'price_paths_shaded.png'
+    plt.savefig(fig_savepath)
+    plt.show()
+    plt.clf()
+
+
 def main(args):
     # Obtain the absolute path to the current script (main.py)
     script_dir = Path(__file__).resolve().parent
@@ -54,34 +82,9 @@ def main(args):
     pct_75 = np.percentile(price_paths, q=75, axis=1)
     pct_90 = np.percentile(price_paths, q=90, axis=1)
 
-    # Visualise summary statistics
-    days = np.arange(T+1)  # x-axis 
+    days = np.arange(T+1)  # x-axis
 
-    plt.plot(days, pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
-    plt.plot(days, mean_prices, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
-    plt.plot(days, pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
-    plt.fill_between(days, pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
-
-    # Configure axes' limits
-    plt.xlim(left=days[0], right=days[-1])
-    plt.ylim(bottom=0, top=pct_90[-1])
-
-    # Add secondary axis
-    ax1 = plt.gca()
-    ax2 = ax1.twinx()
-    ax2.set_ylim(ax1.get_ylim())
-
-    # Set labels and legend
-    plt.title('ASML Simulated Share Price Paths')
-    ax1.set_xlabel('Days into the Future')
-    ax1.set_ylabel('Share Price')
-    ax1.legend(loc='upper left')
-
-    # Save plot in the repository's home directory
-    fig_savepath = script_dir / '..' / 'price_paths_shaded.png'
-    plt.savefig(fig_savepath)
-    plt.show()
-    plt.clf()
+    plot_price_paths(days, pct_10, pct_25, mean_prices, pct_75, pct_90, base_dir=script_dir)
 
     # Add plot also showing historical share price
     max_history = min(len(adj_close), (T+1)*3)  # avoid too much historical data
