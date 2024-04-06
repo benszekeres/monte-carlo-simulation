@@ -90,6 +90,19 @@ def plot_histogram(price_paths, N, base_dir):
     plt.show()
     plt.clf()
 
+def plot_box(tp_prices, month_ends, base_dir):
+    sns.boxplot(data=tp_prices)
+    plt.title('Box Plot of Simulated Share Prices at Selected Time Points')
+    plt.xlabel('Nearest Month End')
+    plt.ylabel('Share Price')
+    plt.xticks(ticks=range(4), labels=month_ends)
+
+    # Save plot in the repository's home directory
+    fig_savepath = base_dir / '..' / 'box_plot.png'
+    plt.savefig(fig_savepath)
+    plt.show()
+    plt.clf()
+
 
 def main(args):
     # Obtain the absolute path to the current script (main.py)
@@ -147,28 +160,17 @@ def main(args):
     # Plot histogram of final prices
     plot_histogram(price_paths, N, base_dir=script_dir)
 
-    # Add box plot of prices at given five evenly spaced time points
     tp_prices = [price_paths[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
     tp_dates = [simulation_dates[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
 
     # Convert dates to nearest month-end
     month_ends = [tp_date.to_period('M').to_timestamp(how='end').date().strftime('%Y/%m/%d')
                    for tp_date in tp_dates]  # nearest month ends
-    
     month_ends[-1] = f'{month_ends[-1]} (Final)'
-    
-    sns.boxplot(data=tp_prices)
-    plt.title('Box Plot of Simulated Share Prices at Selected Time Points')
-    plt.xlabel('Nearest Month End')
-    plt.ylabel('Share Price')
-    plt.xticks(ticks=range(4), labels=month_ends)
 
-    # Save plot in the repository's home directory
-    fig_savepath = script_dir / '..' / 'box_plot.png'
-    plt.savefig(fig_savepath)
-    plt.show()
-    plt.clf()
-    
+    # Add box plot of prices at given five evenly spaced time points
+    plot_box(tp_prices, month_ends, base_dir=script_dir)
+
 
 if __name__ == '__main__':
     # Instantiate the parser
