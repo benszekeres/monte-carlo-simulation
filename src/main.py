@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import sys
 
-# Append the 'utils' directory to sys.path
+# Append the project root directory to sys.path to import from utils
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from utils import plots
 
