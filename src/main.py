@@ -17,6 +17,8 @@ FIG_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
 plt.rcParams['figure.figsize'] = FIG_SIZE
 
 def plot_price_paths(days, pct_10, pct_25, mean, pct_75, pct_90, base_dir):
+    """Docstring to follow.
+    """
     plt.plot(days, pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
     plt.plot(days, mean, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
     plt.plot(days, pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
@@ -44,6 +46,8 @@ def plot_price_paths(days, pct_10, pct_25, mean, pct_75, pct_90, base_dir):
     plt.clf()
 
 def plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10, pct_25, mean, pct_75, pct_90, base_dir):
+    """Docstring to follow.
+    """
     plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
     plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
     plt.plot(combined_dates[max_history:], mean, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
@@ -72,6 +76,8 @@ def plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10
     plt.clf()
 
 def plot_histogram(price_paths, N, base_dir):
+    """Docstring to follow.
+    """
     num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
     plt.hist(price_paths[-1], bins=num_bins, alpha=0.8, edgecolor='black', linewidth=1)
     plt.title('Distribution of Simulated Share Prices on Final Day')
@@ -91,6 +97,8 @@ def plot_histogram(price_paths, N, base_dir):
     plt.clf()
 
 def plot_box(tp_prices, month_ends, base_dir):
+    """Docstring to follow.
+    """
     sns.boxplot(data=tp_prices)
     plt.title('Box Plot of Simulated Share Prices at Selected Time Points')
     plt.xlabel('Nearest Month End')
