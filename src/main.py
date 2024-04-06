@@ -14,7 +14,24 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from utils import plots
 
 
+class MonteCarlo:
+    def __init__(self):
+        """
+        """
+        pass
+
+    def simulate(self):
+        """
+        """
+        pass
+
+    def load_data(self):
+        pass
+
+
 def main(args):
+    monte_carlo = MonteCarlo()
+
     # Obtain the absolute path to the current script (main.py)
     script_dir = Path(__file__).resolve().parent
 
