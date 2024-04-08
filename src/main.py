@@ -38,56 +38,56 @@ class MonteCarlo:
         """Docstring to follow.
         """
         # Use the adjusted close price to compute log returns
-        adj_close = self.df['Adj Close'].values
-        log_returns = np.log(adj_close[1:] / adj_close[:-1])
+        self.adj_close = self.df['Adj Close'].values
+        log_returns = np.log(self.adj_close[1:] / self.adj_close[:-1])
 
         # Compute mean and standard deviation of log returns
         self.mean = np.mean(log_returns)
         self.sigma = np.std(log_returns)
 
         # Set up any other simulation parameters and variables
-        last_adj_close = adj_close[-1]  # last known adjusted close at the time of simulation
-        price_paths = np.zeros((self.T+1, self.N))  # pre-allocate numpy array to store simulated paths
-        price_paths[0] = last_adj_close
+        last_adj_close = self.adj_close[-1]  # last known adjusted close at the time of simulation
+        self.price_paths = np.zeros((self.T+1, self.N))  # pre-allocate numpy array to store simulated paths
+        self.price_paths[0] = last_adj_close
 
         # Compute simulated price paths
         for t in range(1, self.T+1):
             random_shocks = np.random.normal(self.mean, self.sigma, self.N)  # one random shock per path
-            price_paths[t] = price_paths[t-1] * np.exp(random_shocks)
+            self.price_paths[t] = self.price_paths[t-1] * np.exp(random_shocks)
 
         # Compute summary statistics
-        mean_prices = np.mean(price_paths, axis=1)  # has shape T+1 i.e. mean price per day
-        pct_10 = np.percentile(price_paths, q=10, axis=1)
-        pct_25 = np.percentile(price_paths, q=25, axis=1)
-        pct_75 = np.percentile(price_paths, q=75, axis=1)
-        pct_90 = np.percentile(price_paths, q=90, axis=1)
+        self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
+        self.pct_10 = np.percentile(self.price_paths, q=10, axis=1)
+        self.pct_25 = np.percentile(self.price_paths, q=25, axis=1)
+        self.pct_75 = np.percentile(self.price_paths, q=75, axis=1)
+        self.pct_90 = np.percentile(self.price_paths, q=90, axis=1)
 
     def plot(self):
         """Docstring to follow.
         """
         # Compute necessary date variables for plotting
         dates = pd.to_datetime(self.df['Date'].values)
-        days = np.arange(T+1)  # x-axis
-        max_history = min(len(adj_close), (T+1)*3)  # avoid too much historical data
+        days = np.arange(self.T+1)  # x-axis
+        max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid too much historical data
         dates_axis = dates[-max_history:]
-        simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=T+1, freq='D')
+        simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='D')
         combined_dates = np.concatenate((dates_axis, simulation_dates))  # combine historical and simulation horizon dates
 
         # Plot simulated price paths including an 80% confidence interval
-        plots.plot_price_paths(days, pct_10, pct_25, mean_prices, pct_75, pct_90, base_dir=script_dir)
+        plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir)
 
         # Plot both historical share price and simulated price paths
-        plots.plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10, pct_25, mean_prices, pct_75, pct_90, base_dir=script_dir)
+        plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir)
         
         # Plot histogram of final prices
-        plots.plot_histogram(price_paths, N, base_dir=script_dir)
+        plots.plot_histogram(self.price_paths, self.N, base_dir=self.script_dir)
 
         # Add box plot of prices at given five evenly spaced time points
-        plots.plot_box(price_paths, simulation_dates, T, base_dir=script_dir)
+        plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir)
 
 
 def main(args):
-    monte_carlo = MonteCarlo()
+    monte_carlo = MonteCarlo(T=args.days, N=args.iterations)
     monte_carlo.simulate()
     monte_carlo.plot()
 
