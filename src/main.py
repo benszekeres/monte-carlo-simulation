@@ -15,11 +15,12 @@ from utils import plots
 
 
 class MonteCarlo:
-    def __init__(self, T, N):
+    def __init__(self, T, N, ticker):
         """Docstring to follow.
         """
         self.T = T  # number of future days to simulate
         self.N = N  # number of paths to simulate
+        self.ticker = ticker  # Stock ticker symbol of the stock to be simulated
 
         # Obtain the absolute path to the current script (main.py)
         self.script_dir = Path(__file__).resolve().parent
@@ -31,7 +32,7 @@ class MonteCarlo:
         """Docstring to follow.
         """
         # Load data using a relative path to the data file
-        data_path = self.script_dir / '..' / 'data' / 'ASML.csv'
+        data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
         self.df = pd.read_csv(data_path)
 
     def simulate(self):
@@ -74,20 +75,20 @@ class MonteCarlo:
         combined_dates = np.concatenate((dates_axis, simulation_dates))  # combine historical and simulation horizon dates
 
         # Plot simulated price paths including an 80% confidence interval
-        plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir)
+        plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
 
         # Plot both historical share price and simulated price paths
-        plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir)
+        plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
         
         # Plot histogram of final prices
-        plots.plot_histogram(self.price_paths, self.N, base_dir=self.script_dir)
+        plots.plot_histogram(self.price_paths, self.N, base_dir=self.script_dir, ticker=self.ticker)
 
         # Add box plot of prices at given five evenly spaced time points
-        plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir)
+        plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
 
 
 def main(args):
-    monte_carlo = MonteCarlo(T=args.days, N=args.iterations)
+    monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
     monte_carlo.simulate()
     monte_carlo.plot()
 
@@ -102,6 +103,8 @@ if __name__ == '__main__':
                          help='Number of future days to simulate', default=365)
     parser.add_argument('--iterations', '-i', type=int,
                          help='Number of simulation paths', default=1000)
+    parser.add_argument('--ticker', '-t', type=str,
+                         help='Stock ticker symbol of the stock to be simulated', default='ASML')
     args = parser.parse_args()
     print(vars(args))
     
