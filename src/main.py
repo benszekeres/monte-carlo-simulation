@@ -88,7 +88,7 @@ class MonteCarlo:
 
 
 def main(args):
-    monte_carlo = MonteCarlo(T=args.days, N=args.iterations)
+    monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
     monte_carlo.simulate()
     monte_carlo.plot()
 
