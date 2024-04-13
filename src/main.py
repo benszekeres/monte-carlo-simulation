@@ -63,6 +63,12 @@ class MonteCarlo:
         self.pct_75 = np.percentile(self.price_paths, q=75, axis=1)
         self.pct_90 = np.percentile(self.price_paths, q=90, axis=1)
 
+    def compute_var(self):
+        """Docstring to follow.
+        """
+        pass
+
+
     def plot(self):
         """Docstring to follow.
         """
