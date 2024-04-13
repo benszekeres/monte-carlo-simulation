@@ -59,6 +59,9 @@ class MonteCarlo:
         # Compute simulated returns
         self.simulated_returns = self.price_paths[-1] / self.price_paths[0]
 
+        # Compute VaR
+        self.compute_var()
+
         # Compute summary statistics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
         self.pct_10 = np.percentile(self.price_paths, q=10, axis=1)
@@ -70,14 +73,14 @@ class MonteCarlo:
         """Docstring to follow.
         """
         # Compute VaR at 95% and 99% confidence thresholds
-        var = {}
+        self.var = {}
         confidence_thresh = [0.95, 0.99]
         sorted_returns = np.sort(self.simulated_returns)  # ascending, uses Timsort O(nlogn)
-        
+
         for thresh in confidence_thresh:
-            var[thresh] = -np.percentile(sorted_returns, thresh*100)
+            self.var[thresh] = -np.percentile(sorted_returns, thresh*100)
         
-        return var
+        return self.var
 
 
     def plot(self):
