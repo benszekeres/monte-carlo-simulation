@@ -56,6 +56,9 @@ class MonteCarlo:
             random_shocks = np.random.normal(self.mean, self.sigma, self.N)  # one random shock per path
             self.price_paths[t] = self.price_paths[t-1] * np.exp(random_shocks)
 
+        # Compute simulated returns
+        self.simulated_returns = self.price_paths[-1] / self.price_paths[0]
+
         # Compute summary statistics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
         self.pct_10 = np.percentile(self.price_paths, q=10, axis=1)
