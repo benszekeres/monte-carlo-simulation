@@ -69,7 +69,15 @@ class MonteCarlo:
     def compute_var(self):
         """Docstring to follow.
         """
-        pass
+        # Compute VaR at 95% and 99% confidence thresholds
+        var = {}
+        confidence_thresh = [0.95, 0.99]
+        sorted_returns = np.sort(self.simulated_returns)  # ascending, uses Timsort O(nlogn)
+        
+        for thresh in confidence_thresh:
+            var[thresh] = -np.percentile(sorted_returns, thresh*100)
+        
+        return var
 
 
     def plot(self):
