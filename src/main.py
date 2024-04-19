@@ -56,12 +56,36 @@ class MonteCarlo:
             random_shocks = np.random.normal(self.mean, self.sigma, self.N)  # one random shock per path
             self.price_paths[t] = self.price_paths[t-1] * np.exp(random_shocks)
 
+        # Compute simulated returns
+        self.simulated_returns = self.price_paths[-1] / self.price_paths[0] - 1
+
+        # Compute VaR
+        self.compute_var_and_cvar()
+
         # Compute summary statistics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
         self.pct_10 = np.percentile(self.price_paths, q=10, axis=1)
         self.pct_25 = np.percentile(self.price_paths, q=25, axis=1)
         self.pct_75 = np.percentile(self.price_paths, q=75, axis=1)
         self.pct_90 = np.percentile(self.price_paths, q=90, axis=1)
+
+    def compute_var_and_cvar(self):
+        """Docstring to follow.
+        """
+        # Compute VaR and CVar at 95% and 99% confidence thresholds
+        self.var = {}
+        self.cvar = {}
+        confidence_thresh = [0.95, 0.99]
+        sorted_returns = np.sort(self.simulated_returns)  # ascending, uses Timsort O(nlogn)
+
+        for thresh in confidence_thresh:
+            # Compute VaR
+            var_idx = int((1 - thresh) * len(sorted_returns))
+            self.var[thresh] = sorted_returns[var_idx]
+
+            # Compute CVaR
+            losses = sorted_returns[:var_idx]
+            self.cvar[thresh] = np.mean(losses)
 
     def plot(self):
         """Docstring to follow.
