@@ -57,7 +57,7 @@ class MonteCarlo:
             self.price_paths[t] = self.price_paths[t-1] * np.exp(random_shocks)
 
         # Compute simulated returns
-        self.simulated_returns = self.price_paths[-1] / self.price_paths[0]
+        self.simulated_returns = self.price_paths[-1] / self.price_paths[0] - 1
 
         # Compute VaR
         self.compute_var_and_cvar()
@@ -80,8 +80,12 @@ class MonteCarlo:
 
         for thresh in confidence_thresh:
             # Compute VaR
-            var_index = int((1 - thresh) * len(sorted_returns))
-            self.var[thresh] = -sorted_returns[var_index]
+            var_idx = int((1 - thresh) * len(sorted_returns))
+            self.var[thresh] = sorted_returns[var_idx]
+
+            # Compute CVaR
+            losses = sorted_returns[:var_idx]
+            self.cvar[thresh] = np.mean(losses)
 
     def plot(self):
         """Docstring to follow.
