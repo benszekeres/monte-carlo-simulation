@@ -77,8 +77,12 @@ def plot_histogram(returns, N, base_dir, ticker):
     plt.xlabel('Returns')
     plt.ylabel('Frequency')
 
-    # Adjust x-axis tick frequency
+    # Format x-axis as a percentage
+    formatter = mticker.FuncFormatter(lambda y, _: '{:.0%}'.format(y))
     ax = plt.gca()
+    ax.xaxis.set_major_formatter(formatter)
+
+    # Adjust x-axis tick frequency
     ticker_frequency = max(returns) / 10  # ensure ten ticks regardless of values
     ticker_frequency_rounded = round(ticker_frequency, -int(np.floor(np.log10(ticker_frequency)))) # Rounds to nearest power of 10
     ax.xaxis.set_major_locator(mticker.MultipleLocator(ticker_frequency_rounded))
