@@ -82,10 +82,10 @@ def plot_histogram(returns, N, base_dir, ticker):
     ax = plt.gca()
     ax.xaxis.set_major_formatter(formatter)
 
-    # Adjust x-axis tick frequency
-    ticker_frequency = max(returns) / 10  # ensure ten ticks regardless of values
-    ticker_frequency_rounded = round(ticker_frequency, -int(np.floor(np.log10(ticker_frequency)))) # Rounds to nearest power of 10
-    ax.xaxis.set_major_locator(mticker.MultipleLocator(ticker_frequency_rounded))
+    # Set x-axis limits to the nearest full percentage
+    min_return = np.floor(min(returns))
+    max_return = np.ceil(max(returns))
+    ax.set_xlim(left=min_return, right=max_return)
 
     # Save plot in the repository's home directory
     fig_savepath = base_dir / '..' / f'{ticker}_histogram_returns.png'
