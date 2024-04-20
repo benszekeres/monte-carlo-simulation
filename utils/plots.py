@@ -116,3 +116,8 @@ def plot_box(price_paths, simulation_dates, T, base_dir, ticker):
     plt.savefig(fig_savepath)
     plt.show()
     plt.clf()
+
+def plot_summary_statistics():
+    """Docstring to follow.
+    """
+    pass

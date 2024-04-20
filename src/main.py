@@ -87,6 +87,11 @@ class MonteCarlo:
             losses = sorted_returns[:var_idx]
             self.cvar[thresh] = np.mean(losses)
 
+    def compute_summary_statistics(self):
+        """Docstring to follow.
+        """
+        pass
+
     def plot(self):
         """Docstring to follow.
         """
@@ -109,6 +114,9 @@ class MonteCarlo:
 
         # Add box plot of prices at given five evenly spaced time points
         plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
+
+        # Save table of summary statistics as an image
+        plots.plot_summary_statistics()
 
 
 def main(args):
