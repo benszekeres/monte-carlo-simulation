@@ -104,8 +104,8 @@ class MonteCarlo:
         # Plot both historical share price and simulated price paths
         plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
         
-        # Plot histogram of final prices
-        plots.plot_histogram(self.price_paths, self.N, base_dir=self.script_dir, ticker=self.ticker)
+        # Plot histogram of simulated returns
+        plots.plot_histogram(self.simulated_returns, self.N, base_dir=self.script_dir, ticker=self.ticker)
 
         # Add box plot of prices at given five evenly spaced time points
         plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
