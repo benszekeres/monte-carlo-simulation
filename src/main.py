@@ -71,10 +71,10 @@ class MonteCarlo:
         # Compute VaR and CVar at 95% and 99% confidence thresholds
         self.var = {}
         self.cvar = {}
-        confidence_thresh = [0.95, 0.99]
+        self.confidence_thresh = [0.95, 0.99]
         sorted_returns = np.sort(self.simulated_returns)  # ascending, uses Timsort O(nlogn)
 
-        for thresh in confidence_thresh:
+        for thresh in self.confidence_thresh:
             # Compute VaR
             var_idx = int((1 - thresh) * len(sorted_returns))
             self.var[thresh] = sorted_returns[var_idx]
@@ -95,7 +95,16 @@ class MonteCarlo:
 
         # Create summary statistics table
         data = []
-        data.append({'Metric': 'Mean Final Price', 'Value': self.mean_prices[-1]})
+
+        # Mean
+        data.append({'Metric': 'Mean Final Price', 'Value': int(self.mean_prices[-1])})
+
+        # VaR and CVaR
+        for thresh in self.confidence_thresh:
+            data.append({'Metric': f'VaR {int(thresh*100)}%', 'Value': f'{self.var[thresh]:.1%}'})
+            data.append({'Metric': f'CVaR {int(thresh*100)}%', 'Value': f'{self.cvar[thresh]:.1%}'})
+        
+        # Concatenate into a class member DataFrame
         self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
 
     def plot(self):
@@ -110,16 +119,16 @@ class MonteCarlo:
         combined_dates = np.concatenate((dates_axis, simulation_dates))  # combine historical and simulation horizon dates
 
         # Plot simulated price paths including an 80% confidence interval
-        plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
+        # plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
 
         # Plot both historical share price and simulated price paths
-        plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
+        # plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
         
         # Plot histogram of simulated returns
-        plots.plot_histogram(self.simulated_returns, self.N, base_dir=self.script_dir, ticker=self.ticker)
+        # plots.plot_histogram(self.simulated_returns, self.N, base_dir=self.script_dir, ticker=self.ticker)
 
         # Add box plot of prices at given five evenly spaced time points
-        plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
+        # plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
 
         # Save table of summary statistics as an image
         plots.plot_summary_statistics(self.summary_stats, self.ticker)
