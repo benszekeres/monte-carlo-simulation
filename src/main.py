@@ -65,13 +65,6 @@ class MonteCarlo:
         # Compute summary statistics
         self.compute_summary_statistics()
 
-        # Compute summary statistics
-        self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
-        self.pct_10 = np.percentile(self.price_paths, q=10, axis=1)
-        self.pct_25 = np.percentile(self.price_paths, q=25, axis=1)
-        self.pct_75 = np.percentile(self.price_paths, q=75, axis=1)
-        self.pct_90 = np.percentile(self.price_paths, q=90, axis=1)
-
     def compute_var_and_cvar(self):
         """Docstring to follow.
         """
@@ -93,7 +86,17 @@ class MonteCarlo:
     def compute_summary_statistics(self):
         """Docstring to follow.
         """
-        self.summary_statistics = pd.DataFrame(columns=['Metric', 'Value'])
+        # Compute basic summary statistics
+        self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
+        self.pct_10 = np.percentile(self.price_paths, q=10, axis=1)
+        self.pct_25 = np.percentile(self.price_paths, q=25, axis=1)
+        self.pct_75 = np.percentile(self.price_paths, q=75, axis=1)
+        self.pct_90 = np.percentile(self.price_paths, q=90, axis=1)
+
+        # Create summary statistics table
+        data = []
+        data.append({'Metric': 'Mean Final Price', 'Value': self.mean_prices[-1]})
+        self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
 
     def plot(self):
         """Docstring to follow.
@@ -119,7 +122,7 @@ class MonteCarlo:
         plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
 
         # Save table of summary statistics as an image
-        plots.plot_summary_statistics(self.summary_statistics)
+        plots.plot_summary_statistics(self.summary_stats, self.ticker)
 
 
 def main(args):

@@ -117,7 +117,19 @@ def plot_box(price_paths, simulation_dates, T, base_dir, ticker):
     plt.show()
     plt.clf()
 
-def plot_summary_statistics(statistics_df):
+def plot_summary_statistics(statistics_df, ticker):
     """Docstring to follow.
     """
-    pass
+    # Set a figure size that can accommodate the full table
+    fig, ax = plt.subplots(figsize=FIG_SIZE)
+    ax.axis('tight')
+    ax.axis('off')
+    ax.table(cellText=statistics_df.values,
+                colLabels=statistics_df.columns,
+                cellLoc='center',
+                loc='center')
+
+    # Save figure in the repository's home directory
+    plt.savefig(f'{ticker}_summary_statistics.png')
+    plt.show()
+    plt.clf()
