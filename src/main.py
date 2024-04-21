@@ -96,6 +96,10 @@ class MonteCarlo:
         # Create summary statistics table
         data = []
 
+        # Simulation parameters
+        data.append({'Metric': 'Number of Simulated Paths', 'Value': self.N})
+        data.append({'Metric': 'Simulation Time Horizon', 'Value': f'{self.T} days'})
+
         # Mean
         data.append({'Metric': 'Mean Final Price', 'Value': int(self.mean_prices[-1])})
 
