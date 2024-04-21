@@ -88,6 +88,8 @@ class MonteCarlo:
         """
         # Compute basic summary statistics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
+        self.min_price = np.min(self.price_paths[-1])
+        self.max_price = np.max(self.price_paths[-1])
         self.pct_10 = np.percentile(self.price_paths, q=10, axis=1)
         self.pct_25 = np.percentile(self.price_paths, q=25, axis=1)
         self.pct_75 = np.percentile(self.price_paths, q=75, axis=1)
@@ -100,8 +102,10 @@ class MonteCarlo:
         data.append({'Metric': 'Number of Simulated Paths', 'Value': self.N})
         data.append({'Metric': 'Simulation Time Horizon', 'Value': f'{self.T} days'})
 
-        # Mean
-        data.append({'Metric': 'Mean Final Price', 'Value': int(self.mean_prices[-1])})
+        # Mean, min, max
+        data.append({'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.1f}'})
+        data.append({'Metric': 'Min Final Price', 'Value': f'{self.min_price:.1f}'})
+        data.append({'Metric': 'Max Final Price', 'Value': f'{self.max_price:.1f}'})
 
         # VaR and CVaR
         for thresh in self.confidence_thresh:
