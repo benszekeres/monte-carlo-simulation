@@ -133,6 +133,7 @@ def plot_summary_statistics(statistics_df, ticker):
     for (row_idx, _), cell in table.get_celld().items():
         if row_idx == 0:  # i.e. first row
             cell.get_text().set_weight('bold')
+        cell.set_height(0.1)  # adjust row height for all rows
 
     # Save figure in the repository's home directory
     plt.savefig(f'{ticker}_summary_statistics.png')
