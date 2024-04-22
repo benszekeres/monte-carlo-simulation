@@ -116,3 +116,26 @@ def plot_box(price_paths, simulation_dates, T, base_dir, ticker):
     plt.savefig(fig_savepath)
     plt.show()
     plt.clf()
+
+def plot_summary_statistics(statistics_df, ticker):
+    """Docstring to follow.
+    """
+    # Set a figure size that can accommodate the full table
+    fig, ax = plt.subplots(figsize=FIG_SIZE)
+    ax.axis('tight')
+    ax.axis('off')
+    table = ax.table(cellText=statistics_df.values,
+                     colLabels=statistics_df.columns,
+                     cellLoc='center',
+                     loc='center')
+
+    # Make the column headers bold
+    for (row_idx, _), cell in table.get_celld().items():
+        if row_idx == 0:  # i.e. first row
+            cell.get_text().set_weight('bold')
+        cell.set_height(0.1)  # adjust row height for all rows
+
+    # Save figure in the repository's home directory
+    plt.savefig(f'{ticker}_summary_statistics.png')
+    plt.show()
+    plt.clf()
