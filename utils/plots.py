@@ -124,10 +124,15 @@ def plot_summary_statistics(statistics_df, ticker):
     fig, ax = plt.subplots(figsize=FIG_SIZE)
     ax.axis('tight')
     ax.axis('off')
-    ax.table(cellText=statistics_df.values,
-                colLabels=statistics_df.columns,
-                cellLoc='center',
-                loc='center')
+    table = ax.table(cellText=statistics_df.values,
+                     colLabels=statistics_df.columns,
+                     cellLoc='center',
+                     loc='center')
+
+    # Make the column headers bold
+    for (row_idx, _), cell in table.get_celld().items():
+        if row_idx == 0:  # i.e. first row
+            cell.get_text().set_weight('bold')
 
     # Save figure in the repository's home directory
     plt.savefig(f'{ticker}_summary_statistics.png')
