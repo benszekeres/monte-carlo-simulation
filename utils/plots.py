@@ -120,20 +120,38 @@ def plot_box(price_paths, simulation_dates, T, base_dir, ticker):
 def plot_summary_statistics(statistics_df, ticker):
     """Docstring to follow.
     """
+    # Define colours
+    edge_colour = 'white'
+    header_cell_colour = '#141866'  # dark blue/navy
+    header_text_colour = 'white'
+    row_colors = ['white', 'lightgrey']  # every other row will be shaded
+
     # Set a figure size that can accommodate the full table
-    fig, ax = plt.subplots(figsize=FIG_SIZE)
+    _, ax = plt.subplots(figsize=FIG_SIZE)
     ax.axis('tight')
     ax.axis('off')
     table = ax.table(cellText=statistics_df.values,
                      colLabels=statistics_df.columns,
+                     bbox=[0, 0, 1, 1],
                      cellLoc='center',
                      loc='center')
+    table.auto_set_font_size(False)
 
     # Make the column headers bold
     for (row_idx, _), cell in table.get_celld().items():
+        cell.set_edgecolor(edge_colour)
+        cell.set_height(0.1)  # adjust row height for all rows
         if row_idx == 0:  # i.e. first row
             cell.get_text().set_weight('bold')
-        cell.set_height(0.1)  # adjust row height for all rows
+            cell.get_text().set_color(header_text_colour)
+            cell.set_facecolor(header_cell_colour)
+            cell.set_fontsize(13)
+        else:
+            is_shaded = row_idx % len(row_colors)
+            cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
+            cell.set_fontsize(12)
+
+    plt.tight_layout()
 
     # Save figure in the repository's home directory
     plt.savefig(f'{ticker}_summary_statistics.png')
