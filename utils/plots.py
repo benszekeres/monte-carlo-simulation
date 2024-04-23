@@ -127,13 +127,14 @@ def plot_summary_statistics(statistics_df, ticker):
     row_colors = ['white', 'lightgrey']  # every other row will be shaded
 
     # Set a figure size that can accommodate the full table
-    fig, ax = plt.subplots(figsize=FIG_SIZE)
+    _, ax = plt.subplots(figsize=FIG_SIZE)
     ax.axis('tight')
     ax.axis('off')
     table = ax.table(cellText=statistics_df.values,
                      colLabels=statistics_df.columns,
                      cellLoc='center',
                      loc='center')
+    table.auto_set_font_size(False)
 
     # Make the column headers bold
     for (row_idx, _), cell in table.get_celld().items():
@@ -143,9 +144,11 @@ def plot_summary_statistics(statistics_df, ticker):
             cell.get_text().set_weight('bold')
             cell.get_text().set_color(header_text_colour)
             cell.set_facecolor(header_cell_colour)
+            cell.set_fontsize(12)
         else:
             is_shaded = row_idx % len(row_colors)
             cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
+            cell.set_fontsize(10)
 
     # Save figure in the repository's home directory
     plt.savefig(f'{ticker}_summary_statistics.png')
