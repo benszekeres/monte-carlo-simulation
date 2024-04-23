@@ -132,6 +132,7 @@ def plot_summary_statistics(statistics_df, ticker):
     ax.axis('off')
     table = ax.table(cellText=statistics_df.values,
                      colLabels=statistics_df.columns,
+                     bbox=[0, 0, 1, 1],
                      cellLoc='center',
                      loc='center')
     table.auto_set_font_size(False)
@@ -148,7 +149,9 @@ def plot_summary_statistics(statistics_df, ticker):
         else:
             is_shaded = row_idx % len(row_colors)
             cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
-            cell.set_fontsize(10)
+            cell.set_fontsize(11)
+
+    plt.tight_layout()
 
     # Save figure in the repository's home directory
     plt.savefig(f'{ticker}_summary_statistics.png')
