@@ -27,7 +27,7 @@ def plot_price_paths(days, pct_10, pct_25, mean, pct_75, pct_90, base_dir, ticke
 
     # Set labels and legend
     plt.title(f'{ticker.upper()} Simulated Share Price Paths')
-    ax1.set_xlabel('Days into the Future')
+    ax1.set_xlabel('Trading days into the Future')
     ax1.set_ylabel('Share Price')
     ax1.legend(loc='upper left')
 
