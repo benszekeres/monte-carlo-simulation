@@ -120,6 +120,10 @@ def plot_box(price_paths, simulation_dates, T, base_dir, ticker):
 def plot_summary_statistics(statistics_df, ticker):
     """Docstring to follow.
     """
+    # Define colours
+    edge_colour = 'white'
+    row_colors = ['white', 'lightgrey']  # every other row will be shaded
+
     # Set a figure size that can accommodate the full table
     fig, ax = plt.subplots(figsize=FIG_SIZE)
     ax.axis('tight')
@@ -131,9 +135,13 @@ def plot_summary_statistics(statistics_df, ticker):
 
     # Make the column headers bold
     for (row_idx, _), cell in table.get_celld().items():
+        cell.set_edgecolor(edge_colour)
+        cell.set_height(0.1)  # adjust row height for all rows
         if row_idx == 0:  # i.e. first row
             cell.get_text().set_weight('bold')
-        cell.set_height(0.1)  # adjust row height for all rows
+        else:
+            is_shaded = row_idx % len(row_colors)
+            cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
 
     # Save figure in the repository's home directory
     plt.savefig(f'{ticker}_summary_statistics.png')
