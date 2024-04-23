@@ -122,6 +122,8 @@ def plot_summary_statistics(statistics_df, ticker):
     """
     # Define colours
     edge_colour = 'white'
+    header_cell_colour = '#141866'  # dark blue/navy
+    header_text_colour = 'white'
     row_colors = ['white', 'lightgrey']  # every other row will be shaded
 
     # Set a figure size that can accommodate the full table
@@ -139,6 +141,8 @@ def plot_summary_statistics(statistics_df, ticker):
         cell.set_height(0.1)  # adjust row height for all rows
         if row_idx == 0:  # i.e. first row
             cell.get_text().set_weight('bold')
+            cell.get_text().set_color(header_text_colour)
+            cell.set_facecolor(header_cell_colour)
         else:
             is_shaded = row_idx % len(row_colors)
             cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
