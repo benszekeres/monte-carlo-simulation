@@ -145,11 +145,11 @@ def plot_summary_statistics(statistics_df, ticker):
             cell.get_text().set_weight('bold')
             cell.get_text().set_color(header_text_colour)
             cell.set_facecolor(header_cell_colour)
-            cell.set_fontsize(12)
+            cell.set_fontsize(13)
         else:
             is_shaded = row_idx % len(row_colors)
             cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
-            cell.set_fontsize(11)
+            cell.set_fontsize(12)
 
     plt.tight_layout()
 
