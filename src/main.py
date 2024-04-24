@@ -119,7 +119,11 @@ class MonteCarlo:
     def generate_trading_days(start_date, num_trading_days):
         """Description to follow.
         """
-        pass
+        # Generate a date range that is longer than the number of trading days
+        calendar_days = pd.date_range(start=start_date, periods=num_trading_days*2, freq='B')  # 'B' for business days
+        # Select only the number of trading days needed
+        trading_days = calendar_days[:num_trading_days]
+        return trading_days
 
     def plot(self):
         """Docstring to follow.
