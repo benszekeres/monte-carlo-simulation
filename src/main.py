@@ -115,6 +115,12 @@ class MonteCarlo:
         # Concatenate into a class member DataFrame
         self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
 
+    @staticmethod
+    def generate_trading_days(start_date, num_trading_days):
+        """Description to follow.
+        """
+        pass
+
     def plot(self):
         """Docstring to follow.
         """
