@@ -18,7 +18,7 @@ class MonteCarlo:
     def __init__(self, T, N, ticker):
         """Docstring to follow.
         """
-        self.T = T  # number of future days to simulate
+        self.T = T  # number of future trading days to simulate
         self.N = N  # number of paths to simulate
         self.ticker = ticker  # Stock ticker symbol of the stock to be simulated
 
@@ -100,7 +100,7 @@ class MonteCarlo:
 
         # Simulation parameters
         data.append({'Metric': 'Number of Simulated Paths', 'Value': self.N})
-        data.append({'Metric': 'Simulation Time Horizon', 'Value': f'{self.T} days'})
+        data.append({'Metric': 'Simulation Time Horizon', 'Value': f'{self.T} trading days'})
 
         # Mean, min, max
         data.append({'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.0f}'})
@@ -120,23 +120,23 @@ class MonteCarlo:
         """
         # Compute necessary date variables for plotting
         dates = pd.to_datetime(self.df['Date'].values)
-        days = np.arange(self.T+1)  # x-axis
-        max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid too much historical data
+        days = np.arange(self.T+1)  # x-axis (+1 to consider the latest existing data point)
+        max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid displaying too much historical data
         dates_axis = dates[-max_history:]
-        simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='D')
+        simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
         combined_dates = np.concatenate((dates_axis, simulation_dates))  # combine historical and simulation horizon dates
 
         # Plot simulated price paths including an 80% confidence interval
-        # plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
-
+        plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
+        
         # Plot both historical share price and simulated price paths
-        # plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
+        plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
         
         # Plot histogram of simulated returns
-        # plots.plot_histogram(self.simulated_returns, self.N, base_dir=self.script_dir, ticker=self.ticker)
+        plots.plot_histogram(self.simulated_returns, self.N, base_dir=self.script_dir, ticker=self.ticker)
 
         # Add box plot of prices at given five evenly spaced time points
-        # plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
+        plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
 
         # Save table of summary statistics as an image
         plots.plot_summary_statistics(self.summary_stats, self.ticker)
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 
     # TODO: add any other command line arguments (i.e. share price history to consider)
     parser.add_argument('--days', '-d', type=int,
-                         help='Number of future days to simulate', default=365)
+                         help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.', default=252)
     parser.add_argument('--iterations', '-i', type=int,
                          help='Number of simulation paths', default=1000)
     parser.add_argument('--ticker', '-t', type=str,
