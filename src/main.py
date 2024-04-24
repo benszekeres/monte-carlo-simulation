@@ -115,30 +115,20 @@ class MonteCarlo:
         # Concatenate into a class member DataFrame
         self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
 
-    @staticmethod
-    def generate_trading_days(start_date, num_trading_days):
-        """Description to follow.
-        """
-        # Generate a date range that is longer than the number of trading days
-        calendar_days = pd.date_range(start=start_date, periods=num_trading_days*2, freq='B')  # 'B' for business days
-        # Select only the number of trading days needed
-        trading_days = calendar_days[:num_trading_days]
-        return trading_days
-
     def plot(self):
         """Docstring to follow.
         """
         # Compute necessary date variables for plotting
         dates = pd.to_datetime(self.df['Date'].values)
-        days = np.arange(self.T+1)  # x-axis
+        days = np.arange(self.T+1)  # x-axis (+1 to consider the latest existing data point)
         max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid displaying too much historical data
         dates_axis = dates[-max_history:]
-        simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='D')
+        simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
         combined_dates = np.concatenate((dates_axis, simulation_dates))  # combine historical and simulation horizon dates
 
         # Plot simulated price paths including an 80% confidence interval
         plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
-
+        
         # Plot both historical share price and simulated price paths
         plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
         
