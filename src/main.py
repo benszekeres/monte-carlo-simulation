@@ -4,6 +4,7 @@ Example use:
     python3 main.py
 """
 
+import argparse
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -150,10 +151,8 @@ def main(args: argparse.Namespace) -> None:
 
 if __name__ == '__main__':
     # Instantiate the parser
-    import argparse
     parser = argparse.ArgumentParser(description='Monte Carlo Simulation')
 
-    # TODO: add any other command line arguments (i.e. share price history to consider)
     parser.add_argument('--days', '-d', type=int,
                          help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.', default=252)
     parser.add_argument('--iterations', '-i', type=int,

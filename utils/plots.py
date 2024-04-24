@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import numpy as np
+import pandas as pd
+from pathlib import Path
 import seaborn as sns
 
 
@@ -8,7 +10,14 @@ import seaborn as sns
 FIG_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
 plt.rcParams['figure.figsize'] = FIG_SIZE
 
-def plot_price_paths(days, pct_10, pct_25, mean, pct_75, pct_90, base_dir, ticker):
+def plot_price_paths(days: np.ndarray,
+                     pct_10: np.ndarray,
+                     pct_25: np.ndarray,
+                     mean: np.ndarray,
+                     pct_75: np.ndarray,
+                     pct_90: np.ndarray,
+                     base_dir: Path,
+                     ticker: str) -> None:
     """Docstring to follow.
     """
     plt.plot(days, pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
@@ -37,7 +46,16 @@ def plot_price_paths(days, pct_10, pct_25, mean, pct_75, pct_90, base_dir, ticke
     plt.show()
     plt.clf()
 
-def plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10, pct_25, mean, pct_75, pct_90, base_dir, ticker):
+def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
+                                  max_history: int,
+                                  adj_close: np.ndarray,
+                                  pct_10: np.ndarray,
+                                  pct_25: np.ndarray,
+                                  mean: np.ndarray,
+                                  pct_75: np.ndarray,
+                                  pct_90: np.ndarray,
+                                  base_dir: Path,
+                                  ticker: str) -> None:
     """Docstring to follow.
     """
     plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
@@ -67,7 +85,7 @@ def plot_price_paths_with_history(combined_dates, max_history, adj_close, pct_10
     plt.show()
     plt.clf()
 
-def plot_histogram(returns, N, base_dir, ticker):
+def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> None:
     """Docstring to follow.
     """
     num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
@@ -93,7 +111,8 @@ def plot_histogram(returns, N, base_dir, ticker):
     plt.show()
     plt.clf()
 
-def plot_box(price_paths, simulation_dates, T, base_dir, ticker):
+def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
+             T: int, base_dir: Path, ticker: str) -> None:
     """Docstring to follow.
     """
     # Compute time point prices and dates
@@ -117,7 +136,7 @@ def plot_box(price_paths, simulation_dates, T, base_dir, ticker):
     plt.show()
     plt.clf()
 
-def plot_summary_statistics(statistics_df, ticker):
+def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     """Docstring to follow.
     """
     # Define colours
