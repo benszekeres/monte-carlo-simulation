@@ -4,6 +4,7 @@ Example use:
     python3 main.py
 """
 
+import argparse
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -15,7 +16,7 @@ from utils import plots
 
 
 class MonteCarlo:
-    def __init__(self, T, N, ticker):
+    def __init__(self, T: int, N: int, ticker: str) -> None:
         """Docstring to follow.
         """
         self.T = T  # number of future trading days to simulate
@@ -28,14 +29,14 @@ class MonteCarlo:
         # Load data
         self.load_data()
 
-    def load_data(self):
+    def load_data(self) -> None:
         """Docstring to follow.
         """
         # Load data using a relative path to the data file
         data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
         self.df = pd.read_csv(data_path)
 
-    def simulate(self):
+    def simulate(self) -> None:
         """Docstring to follow.
         """
         # Use the adjusted close price to compute log returns
@@ -65,7 +66,7 @@ class MonteCarlo:
         # Compute summary statistics
         self.compute_summary_statistics()
 
-    def compute_var_and_cvar(self):
+    def compute_var_and_cvar(self) -> None:
         """Docstring to follow.
         """
         # Compute VaR and CVar at 95% and 99% confidence thresholds
@@ -83,7 +84,7 @@ class MonteCarlo:
             losses = sorted_returns[:var_idx]
             self.cvar[thresh] = np.mean(losses)
 
-    def compute_summary_statistics(self):
+    def compute_summary_statistics(self) -> None:
         """Docstring to follow.
         """
         # Compute basic summary statistics
@@ -115,7 +116,7 @@ class MonteCarlo:
         # Concatenate into a class member DataFrame
         self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
 
-    def plot(self):
+    def plot(self) -> None:
         """Docstring to follow.
         """
         # Compute necessary date variables for plotting
@@ -142,7 +143,7 @@ class MonteCarlo:
         plots.plot_summary_statistics(self.summary_stats, self.ticker)
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
     monte_carlo.simulate()
     monte_carlo.plot()
@@ -150,10 +151,8 @@ def main(args):
 
 if __name__ == '__main__':
     # Instantiate the parser
-    import argparse
     parser = argparse.ArgumentParser(description='Monte Carlo Simulation')
 
-    # TODO: add any other command line arguments (i.e. share price history to consider)
     parser.add_argument('--days', '-d', type=int,
                          help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.', default=252)
     parser.add_argument('--iterations', '-i', type=int,
