@@ -16,6 +16,29 @@ from utils import plots
 
 
 class MonteCarlo:
+    """A class for running Monte Carlo simulations on share price data.
+
+    Attributes:
+        T (int): Number of future trading days to simulate.
+        N (int): Number of paths to simulate.
+        ticker (str): Stock ticker symbol of the stock to be simulated.
+        script_dir (Path): The absolute path to the current script directory.
+        df (pd.DataFrame): DataFrame holding the share price data.
+        adj_close (np.ndarray): Adjusted close prices extracted from `df`.
+        price_paths (np.ndarray): Simulated price paths for the stock.
+        simulated_returns (np.ndarray): Simulated returns from all price paths.
+        var (dict[float, float]): Value at Risk (VaR) values for the specified confidence levels.
+        cvar (dict[float, float]): Conditional Value at Risk (CVaR) values for the specified confidence levels.
+        summary_stats (pd.DataFrame): Summary statistics for the simulation results.
+        confidence_thresh (list[float]): Confidence thresholds used for VaR and CVaR calculations.
+        mean_prices (np.ndarray): Mean prices calculated per day over the simulation.
+        min_price (float): Minimum price on the last day of simulation.
+        max_price (float): Maximum price on the last day of simulation.
+        pct_10 (np.ndarray): 10th percentile prices calculated per day over the simulation.
+        pct_25 (np.ndarray): 25th percentile prices calculated per day over the simulation.
+        pct_75 (np.ndarray): 75th percentile prices calculated per day over the simulation.
+        pct_90 (np.ndarray): 90th percentile prices calculated per day over the simulation.
+    """
     def __init__(self, T: int, N: int, ticker: str) -> None:
         """Docstring to follow.
         """
@@ -156,7 +179,7 @@ if __name__ == '__main__':
     parser.add_argument('--days', '-d', type=int,
                          help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.', default=252)
     parser.add_argument('--iterations', '-i', type=int,
-                         help='Number of simulation paths', default=1000)
+                         help='Number of paths to simulate', default=1000)
     parser.add_argument('--ticker', '-t', type=str,
                          help='Stock ticker symbol of the stock to be simulated', default='ASML')
     args = parser.parse_args()
