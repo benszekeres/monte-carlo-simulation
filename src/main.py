@@ -39,12 +39,18 @@ class MonteCarlo:
         pct_75 (np.ndarray): 75th percentile prices calculated per day over the simulation.
         pct_90 (np.ndarray): 90th percentile prices calculated per day over the simulation.
     """
+
     def __init__(self, T: int, N: int, ticker: str) -> None:
-        """Docstring to follow.
+        """Initialise MonteCarlo.
+
+        Arguments:
+            T (int): Number of future trading days to simulate.
+            N (int): Number of paths to simulate.
+            ticker (str): Stock ticker symbol of the stock to be simulated.
         """
-        self.T = T  # number of future trading days to simulate
-        self.N = N  # number of paths to simulate
-        self.ticker = ticker  # Stock ticker symbol of the stock to be simulated
+        self.T = T
+        self.N = N
+        self.ticker = ticker
 
         # Obtain the absolute path to the current script (main.py)
         self.script_dir = Path(__file__).resolve().parent
