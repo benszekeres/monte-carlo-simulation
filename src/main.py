@@ -104,7 +104,9 @@ class MonteCarlo:
         self.compute_summary_statistics()
 
     def compute_var_and_cvar(self) -> None:
-        """Docstring to follow.
+        """Computes Value at Risk (VaR) and Conditional Value at Risk (CVaR).
+
+        Computation is done using two confidence thresholds: 0.95 and 0.99. 
         """
         # Compute VaR and CVar at 95% and 99% confidence thresholds
         self.var = {}
