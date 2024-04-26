@@ -59,9 +59,12 @@ class MonteCarlo:
         self.load_data()
 
     def load_data(self) -> None:
-        """Docstring to follow.
+        """Loads share price data from a CSV file into the DataFrame `self.df`.
+
+        The CSV file is expected to be named after a stock ticker symbol (`self.ticker`), 
+        located in the `data` directory relative to the parent directory of the script.
+        The CSV file should contain historical share prices with an 'Adj Close' header.
         """
-        # Load data using a relative path to the data file
         data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
         self.df = pd.read_csv(data_path)
 
