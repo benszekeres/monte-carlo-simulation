@@ -127,7 +127,7 @@ class MonteCarlo:
 
         The statistics computed are stored in a DataFrame `self.summary_stats`, 
         and include the following metrics:
-            mean_prices: Mean prices calculated per day over the simulation.
+            mean_price: Mean prices on the last day of simulation.
             min_price: Minimum price on the last day of simulation.
             max_price: Maximum price on the last day of simulation.
             pct_10, pct_25, pct_75, pct_90: The 10th, 25th, 75th and 90th percentile
