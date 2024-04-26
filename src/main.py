@@ -69,7 +69,12 @@ class MonteCarlo:
         self.df = pd.read_csv(data_path)
 
     def simulate(self) -> None:
-        """Docstring to follow.
+        """Performs the MonteCarlo simulation.
+
+        Log returns are computed along with their mean and standard deviation,
+        which are used to simulate `self.N` number of price paths over `self.T` days.
+        Simulated returns are computed from said price paths, and two class member
+        functions are called to compute VaR, CVaR, and summary statistics.
         """
         # Use the adjusted close price to compute log returns
         self.adj_close = self.df['Adj Close'].values
