@@ -108,7 +108,6 @@ class MonteCarlo:
 
         Computation is done using two confidence thresholds: 0.95 and 0.99. 
         """
-        # Compute VaR and CVar at 95% and 99% confidence thresholds
         self.var = {}
         self.cvar = {}
         self.confidence_thresh = [0.95, 0.99]
@@ -124,7 +123,17 @@ class MonteCarlo:
             self.cvar[thresh] = np.mean(losses)
 
     def compute_summary_statistics(self) -> None:
-        """Docstring to follow.
+        """Computes statistics to summarise the simulation outcomes.
+
+        The statistics computed are stored in a DataFrame `self.summary_stats`, 
+        and include the following metrics:
+            mean_prices: Mean prices calculated per day over the simulation.
+            min_price: Minimum price on the last day of simulation.
+            max_price: Maximum price on the last day of simulation.
+            pct_10, pct_25, pct_75, pct_90: The 10th, 25th, 75th and 90th percentile
+            prices calculated per day over the simulation.
+            var: Value at Risk (VaR) values for the specified confidence levels.
+            cvar: Conditional Value at Risk (CVaR) values for the specified confidence levels.
         """
         # Compute basic summary statistics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
