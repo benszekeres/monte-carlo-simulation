@@ -165,7 +165,18 @@ class MonteCarlo:
         self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
 
     def plot(self) -> None:
-        """Docstring to follow.
+        """Plots various figures to visualise the simulation outcomes.
+
+        The figures plotted are:
+            1) Line chart with simulated price paths.
+            2) Line chart with historical & simulated price paths.
+            3) Histogram showing the distribution of simulated returns.
+            4) Box plot showing the distribution of simulated prices across
+               four evenly spaced points in time over the simulation.
+            5) Table displaying the contents of `self.summary_stats`.
+        Some date-related variables are computed in this function, while
+        the for actual plotting calls are made to appropriate methods in
+        the `plots.py` utility file. 
         """
         # Compute necessary date variables for plotting
         dates = pd.to_datetime(self.df['Date'].values)
