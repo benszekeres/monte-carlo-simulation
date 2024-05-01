@@ -21,12 +21,12 @@ def plot_price_paths(days: np.ndarray,
     """Plot simulated share price paths.
 
     Args:
-        days: An array of trading days.
-        pct_10: An array of the 10th percentile prices at each trading day.
-        pct_25: An array of the 25th percentile prices at each trading day.
-        mean: An array of the mean prices at each trading day.
-        pct_75: An array of the 75th percentile prices at each trading day.
-        pct_90: An array of the 90th percentile prices at each trading day.
+        days: Array of trading days.
+        pct_10: Array of the 10th percentile prices at each trading day.
+        pct_25: Array of the 25th percentile prices at each trading day.
+        mean: Array of the mean prices at each trading day.
+        pct_75: Array of the 75th percentile prices at each trading day.
+        pct_90: Array of the 90th percentile prices at each trading day.
         base_dir: The base directory where the plot image will be saved.
         ticker: The stock ticker symbol.
     """
@@ -66,7 +66,19 @@ def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
                                   pct_90: np.ndarray,
                                   base_dir: Path,
                                   ticker: str) -> None:
-    """Docstring to follow.
+    """Plot both historical and simulated share price paths.
+
+    Args:
+        combined_dates: Combined array of historical and simulated dates.
+        max_history: Number of days to include historical data for.
+        adj_close: Array of adjusted closing prices for the historical days.
+        pct_10: Array of the 10th percentile simulated prices.
+        pct_25: Array of the 25th percentile simulated prices.
+        mean: Array of the mean simulated prices.
+        pct_75: Array of the 75th percentile simulated prices.
+        pct_90: Array of the 90th percentile simulated prices.
+        base_dir: The base directory where the plot image will be saved.
+        ticker: The stock ticker symbol.
     """
     plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
     plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
