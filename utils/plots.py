@@ -108,7 +108,16 @@ def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
     plt.clf()
 
 def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> None:
-    """Docstring to follow.
+    """Plot a histogram of simulated returns.
+
+    The returns are computed on the last day of each price path, relative
+    to the starting share price. 
+
+    Args:
+        returns: Array of simulated return values computed on the last day.
+        N: Number of simulation paths used to determine the number of bins.
+        base_dir: The base directory where the histogram will be saved.
+        ticker: The stock ticker symbol.
     """
     num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
 
