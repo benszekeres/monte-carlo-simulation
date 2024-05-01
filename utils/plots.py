@@ -175,7 +175,11 @@ def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
     plt.clf()
 
 def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
-    """Docstring to follow.
+    """Plot a table of summary statistics for simulated data.
+
+    Args:
+        statistics_df: DataFrame containing calculated statistics.
+        ticker: The stock ticker symbol.
     """
     # Define colours
     edge_colour = 'white'
