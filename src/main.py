@@ -134,6 +134,8 @@ class MonteCarlo:
             prices calculated per day over the simulation.
             var: Value at Risk (VaR) values for the specified confidence levels.
             cvar: Conditional Value at Risk (CVaR) values for the specified confidence levels.
+        Some date-related variables are computed in this function, some of 
+        which are stored as class member variables for use in `self.plot`. 
         """
         # Compute basic summary statistics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
@@ -144,12 +146,21 @@ class MonteCarlo:
         self.pct_75 = np.percentile(self.price_paths, q=75, axis=1)
         self.pct_90 = np.percentile(self.price_paths, q=90, axis=1)
 
+        # Compute date-related variables
+        dates = pd.to_datetime(self.df['Date'].values)
+        self.max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid displaying too much historical data
+        dates_axis = dates[-self.max_history:]
+        self.simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
+        self.combined_dates = np.concatenate((dates_axis, self.simulation_dates))  # combine historical and simulation horizon dates
+
         # Create summary statistics table
         data = []
 
-        # Simulation parameters
+        # Simulation overview
         data.append({'Metric': 'Number of Simulated Paths', 'Value': self.N})
         data.append({'Metric': 'Simulation Time Horizon', 'Value': f'{self.T} trading days'})
+        data.append({'Metric': 'Simulation Start Date', 'Value': f'{self.simulation_dates[0].date()}'})
+        data.append({'Metric': 'Simulation End Date', 'Value': f'{self.simulation_dates[-1].date()}'})
 
         # Mean, min, max
         data.append({'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.0f}'})
@@ -174,29 +185,19 @@ class MonteCarlo:
             4) Box plot showing the distribution of simulated prices across
                four evenly spaced points in time over the simulation.
             5) Table displaying the contents of `self.summary_stats`.
-        Some date-related variables are computed in this function, while
-        the for actual plotting calls are made to appropriate methods in
-        the `plots.py` utility file. 
         """
-        # Compute necessary date variables for plotting
-        dates = pd.to_datetime(self.df['Date'].values)
-        days = np.arange(self.T+1)  # x-axis (+1 to consider the latest existing data point)
-        max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid displaying too much historical data
-        dates_axis = dates[-max_history:]
-        simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
-        combined_dates = np.concatenate((dates_axis, simulation_dates))  # combine historical and simulation horizon dates
-
         # Plot simulated price paths including an 80% confidence interval
+        days = np.arange(self.T+1)  # x-axis
         plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
         
         # Plot both historical share price and simulated price paths
-        plots.plot_price_paths_with_history(combined_dates, max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
+        plots.plot_price_paths_with_history(self.combined_dates, self.max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
         
         # Plot histogram of simulated returns
         plots.plot_histogram(self.simulated_returns, self.N, base_dir=self.script_dir, ticker=self.ticker)
 
         # Add box plot of prices at given five evenly spaced time points
-        plots.plot_box(self.price_paths, simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
+        plots.plot_box(self.price_paths, self.simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
 
         # Save table of summary statistics as an image
         plots.plot_summary_statistics(self.summary_stats, self.ticker)
