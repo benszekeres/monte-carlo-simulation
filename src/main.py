@@ -137,10 +137,11 @@ class MonteCarlo:
         Some date-related variables are computed in this function, some of 
         which are stored as class member variables for use in `self.plot`. 
         """
-        # Compute basic summary statistics
+        # Compute prices and return metrics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
         self.min_price = np.min(self.price_paths[-1])
         self.max_price = np.max(self.price_paths[-1])
+        mean_return = np.mean((self.price_paths[-1] - self.adj_close[-1]) / self.adj_close[-1])
         self.pct_10 = np.percentile(self.price_paths, q=10, axis=1)
         self.pct_25 = np.percentile(self.price_paths, q=25, axis=1)
         self.pct_75 = np.percentile(self.price_paths, q=75, axis=1)
@@ -162,10 +163,14 @@ class MonteCarlo:
         data.append({'Metric': 'Simulation Start Date', 'Value': f'{self.simulation_dates[0].date()}'})
         data.append({'Metric': 'Simulation End Date', 'Value': f'{self.simulation_dates[-1].date()}'})
 
-        # Mean, min, max
+        # Starting, mean, min, max simulated share prices
+        data.append({'Metric': 'Starting Price', 'Value': f'{self.adj_close[-1]:.0f}'})
         data.append({'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.0f}'})
         data.append({'Metric': 'Min Final Price', 'Value': f'{self.min_price:.0f}'})
         data.append({'Metric': 'Max Final Price', 'Value': f'{self.max_price:.0f}'})
+
+        # Return metrics
+        data.append({'Metric': f'Mean Return', 'Value': f'{mean_return:.1%}'})
 
         # VaR and CVaR
         for thresh in self.confidence_thresh:
