@@ -18,7 +18,17 @@ def plot_price_paths(days: np.ndarray,
                      pct_90: np.ndarray,
                      base_dir: Path,
                      ticker: str) -> None:
-    """Docstring to follow.
+    """Plot simulated share price paths.
+
+    Args:
+        days: Array of trading days.
+        pct_10: Array of the 10th percentile prices at each trading day.
+        pct_25: Array of the 25th percentile prices at each trading day.
+        mean: Array of the mean prices at each trading day.
+        pct_75: Array of the 75th percentile prices at each trading day.
+        pct_90: Array of the 90th percentile prices at each trading day.
+        base_dir: The base directory where the plot image will be saved.
+        ticker: The stock ticker symbol.
     """
     plt.plot(days, pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
     plt.plot(days, mean, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
@@ -56,7 +66,19 @@ def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
                                   pct_90: np.ndarray,
                                   base_dir: Path,
                                   ticker: str) -> None:
-    """Docstring to follow.
+    """Plot both historical and simulated share price paths.
+
+    Args:
+        combined_dates: Combined array of historical and simulated dates.
+        max_history: Number of days to include historical data for.
+        adj_close: Array of adjusted closing prices for the historical days.
+        pct_10: Array of the 10th percentile simulated prices.
+        pct_25: Array of the 25th percentile simulated prices.
+        mean: Array of the mean simulated prices.
+        pct_75: Array of the 75th percentile simulated prices.
+        pct_90: Array of the 90th percentile simulated prices.
+        base_dir: The base directory where the plot image will be saved.
+        ticker: The stock ticker symbol.
     """
     plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
     plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
@@ -86,7 +108,16 @@ def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
     plt.clf()
 
 def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> None:
-    """Docstring to follow.
+    """Plot a histogram of simulated returns.
+
+    The returns are computed on the last day of each price path, relative
+    to the starting share price. 
+
+    Args:
+        returns: Array of simulated return values computed on the last day.
+        N: Number of simulation paths used to determine the number of bins.
+        base_dir: The base directory where the histogram will be saved.
+        ticker: The stock ticker symbol.
     """
     num_bins = int(N / 20)  # to maintain bin density regardless of number of paths
 
@@ -113,7 +144,14 @@ def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> 
 
 def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
              T: int, base_dir: Path, ticker: str) -> None:
-    """Docstring to follow.
+    """Plot a box plot of simulated share prices at selected time point.
+
+    Args:
+        price_paths: Array of simulated prices at each chosen time point.
+        simulation_dates: Dates for each chosen time point.
+        T: The total number of simulated days.
+        base_dir: The base directory where the box plot will be saved.
+        ticker: The stock ticker symbol.
     """
     # Compute time point prices and dates
     tp_prices = [price_paths[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
@@ -137,7 +175,11 @@ def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
     plt.clf()
 
 def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
-    """Docstring to follow.
+    """Plot a table of summary statistics for simulated data.
+
+    Args:
+        statistics_df: DataFrame containing calculated statistics.
+        ticker: The stock ticker symbol.
     """
     # Define colours
     edge_colour = 'white'

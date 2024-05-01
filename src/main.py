@@ -16,12 +16,41 @@ from utils import plots
 
 
 class MonteCarlo:
+    """A class for running Monte Carlo simulations on share price data.
+
+    Attributes:
+        T (int): Number of future trading days to simulate.
+        N (int): Number of paths to simulate.
+        ticker (str): Stock ticker symbol of the stock to be simulated.
+        script_dir (Path): The absolute path to the current script directory.
+        df (pd.DataFrame): DataFrame holding the share price data.
+        adj_close (np.ndarray): Adjusted close prices extracted from `df`.
+        price_paths (np.ndarray): Simulated price paths for the stock.
+        simulated_returns (np.ndarray): Simulated returns from all price paths.
+        var (dict[float, float]): Value at Risk (VaR) values for the specified confidence levels.
+        cvar (dict[float, float]): Conditional Value at Risk (CVaR) values for the specified confidence levels.
+        summary_stats (pd.DataFrame): Summary statistics for the simulation results.
+        confidence_thresh (list[float]): Confidence thresholds used for VaR and CVaR calculations.
+        mean_prices (np.ndarray): Mean prices calculated per day over the simulation.
+        min_price (float): Minimum price on the last day of simulation.
+        max_price (float): Maximum price on the last day of simulation.
+        pct_10 (np.ndarray): 10th percentile prices calculated per day over the simulation.
+        pct_25 (np.ndarray): 25th percentile prices calculated per day over the simulation.
+        pct_75 (np.ndarray): 75th percentile prices calculated per day over the simulation.
+        pct_90 (np.ndarray): 90th percentile prices calculated per day over the simulation.
+    """
+
     def __init__(self, T: int, N: int, ticker: str) -> None:
-        """Docstring to follow.
+        """Initialise MonteCarlo.
+
+        Arguments:
+            T: Number of future trading days to simulate.
+            N: Number of paths to simulate.
+            ticker: Stock ticker symbol of the stock to be simulated.
         """
-        self.T = T  # number of future trading days to simulate
-        self.N = N  # number of paths to simulate
-        self.ticker = ticker  # Stock ticker symbol of the stock to be simulated
+        self.T = T
+        self.N = N
+        self.ticker = ticker
 
         # Obtain the absolute path to the current script (main.py)
         self.script_dir = Path(__file__).resolve().parent
@@ -30,14 +59,22 @@ class MonteCarlo:
         self.load_data()
 
     def load_data(self) -> None:
-        """Docstring to follow.
+        """Loads share price data from a CSV file into the DataFrame `self.df`.
+
+        The CSV file is expected to be named after a stock ticker symbol (`self.ticker`), 
+        located in the `data` directory relative to the parent directory of the script.
+        The CSV file should contain historical share prices with an 'Adj Close' header.
         """
-        # Load data using a relative path to the data file
         data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
         self.df = pd.read_csv(data_path)
 
     def simulate(self) -> None:
-        """Docstring to follow.
+        """Performs the MonteCarlo simulation.
+
+        Log returns are computed along with their mean and standard deviation,
+        which are used to simulate `self.N` number of price paths over `self.T` days.
+        Simulated returns are computed from said price paths, and two class member
+        functions are called to compute VaR, CVaR, and summary statistics.
         """
         # Use the adjusted close price to compute log returns
         self.adj_close = self.df['Adj Close'].values
@@ -67,9 +104,10 @@ class MonteCarlo:
         self.compute_summary_statistics()
 
     def compute_var_and_cvar(self) -> None:
-        """Docstring to follow.
+        """Computes Value at Risk (VaR) and Conditional Value at Risk (CVaR).
+
+        Computation is done using two confidence thresholds: 0.95 and 0.99. 
         """
-        # Compute VaR and CVar at 95% and 99% confidence thresholds
         self.var = {}
         self.cvar = {}
         self.confidence_thresh = [0.95, 0.99]
@@ -85,7 +123,17 @@ class MonteCarlo:
             self.cvar[thresh] = np.mean(losses)
 
     def compute_summary_statistics(self) -> None:
-        """Docstring to follow.
+        """Computes statistics to summarise the simulation outcomes.
+
+        The statistics computed are stored in a DataFrame `self.summary_stats`, 
+        and include the following metrics:
+            mean_price: Mean prices on the last day of simulation.
+            min_price: Minimum price on the last day of simulation.
+            max_price: Maximum price on the last day of simulation.
+            pct_10, pct_25, pct_75, pct_90: The 10th, 25th, 75th and 90th percentile
+            prices calculated per day over the simulation.
+            var: Value at Risk (VaR) values for the specified confidence levels.
+            cvar: Conditional Value at Risk (CVaR) values for the specified confidence levels.
         """
         # Compute basic summary statistics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
@@ -117,7 +165,18 @@ class MonteCarlo:
         self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
 
     def plot(self) -> None:
-        """Docstring to follow.
+        """Plots various figures to visualise the simulation outcomes.
+
+        The figures plotted are:
+            1) Line chart with simulated price paths.
+            2) Line chart with historical & simulated price paths.
+            3) Histogram showing the distribution of simulated returns.
+            4) Box plot showing the distribution of simulated prices across
+               four evenly spaced points in time over the simulation.
+            5) Table displaying the contents of `self.summary_stats`.
+        Some date-related variables are computed in this function, while
+        the for actual plotting calls are made to appropriate methods in
+        the `plots.py` utility file. 
         """
         # Compute necessary date variables for plotting
         dates = pd.to_datetime(self.df['Date'].values)
@@ -156,7 +215,7 @@ if __name__ == '__main__':
     parser.add_argument('--days', '-d', type=int,
                          help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.', default=252)
     parser.add_argument('--iterations', '-i', type=int,
-                         help='Number of simulation paths', default=1000)
+                         help='Number of paths to simulate', default=1000)
     parser.add_argument('--ticker', '-t', type=str,
                          help='Stock ticker symbol of the stock to be simulated', default='ASML')
     args = parser.parse_args()
