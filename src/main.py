@@ -44,9 +44,9 @@ class MonteCarlo:
         """Initialise MonteCarlo.
 
         Arguments:
-            T (int): Number of future trading days to simulate.
-            N (int): Number of paths to simulate.
-            ticker (str): Stock ticker symbol of the stock to be simulated.
+            T: Number of future trading days to simulate.
+            N: Number of paths to simulate.
+            ticker: Stock ticker symbol of the stock to be simulated.
         """
         self.T = T
         self.N = N
