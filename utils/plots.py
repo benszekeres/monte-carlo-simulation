@@ -18,7 +18,17 @@ def plot_price_paths(days: np.ndarray,
                      pct_90: np.ndarray,
                      base_dir: Path,
                      ticker: str) -> None:
-    """Docstring to follow.
+    """Plot simulated share price paths.
+
+    Args:
+        days: An array of trading days.
+        pct_10: An array of the 10th percentile prices at each trading day.
+        pct_25: An array of the 25th percentile prices at each trading day.
+        mean: An array of the mean prices at each trading day.
+        pct_75: An array of the 75th percentile prices at each trading day.
+        pct_90: An array of the 90th percentile prices at each trading day.
+        base_dir: The base directory where the plot image will be saved.
+        ticker: The stock ticker symbol.
     """
     plt.plot(days, pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
     plt.plot(days, mean, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
