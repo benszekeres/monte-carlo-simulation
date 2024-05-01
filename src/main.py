@@ -162,7 +162,8 @@ class MonteCarlo:
         data.append({'Metric': 'Simulation Start Date', 'Value': f'{self.simulation_dates[0].date()}'})
         data.append({'Metric': 'Simulation End Date', 'Value': f'{self.simulation_dates[-1].date()}'})
 
-        # Mean, min, max
+        # Starting, mean, min, max simulated share prices
+        data.append({'Metric': 'Starting Price', 'Value': f'{self.adj_close[-1]:.0f}'})
         data.append({'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.0f}'})
         data.append({'Metric': 'Min Final Price', 'Value': f'{self.min_price:.0f}'})
         data.append({'Metric': 'Max Final Price', 'Value': f'{self.max_price:.0f}'})
