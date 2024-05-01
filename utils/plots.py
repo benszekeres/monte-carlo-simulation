@@ -144,7 +144,14 @@ def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> 
 
 def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
              T: int, base_dir: Path, ticker: str) -> None:
-    """Docstring to follow.
+    """Plot a box plot of simulated share prices at selected time point.
+
+    Args:
+        price_paths: Array of simulated prices at each chosen time point.
+        simulation_dates: Dates for each chosen time point.
+        T: The total number of simulated days.
+        base_dir: The base directory where the box plot will be saved.
+        ticker: The stock ticker symbol.
     """
     # Compute time point prices and dates
     tp_prices = [price_paths[i] for i in [T//4, 2*T//4, 3*T//4, -1]]
