@@ -13,6 +13,7 @@ import sys
 # Append the project root directory to sys.path to import from utils
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from utils import plots
+from utils.helpers import positive_int, valid_ticker
 
 
 class MonteCarlo:
@@ -190,12 +191,12 @@ class MonteCarlo:
         """Plots various figures to visualise the simulation outcomes.
 
         The figures plotted are:
-            1) Line chart with simulated price paths.
-            2) Line chart with historical & simulated price paths.
-            3) Histogram showing the distribution of simulated returns.
-            4) Box plot showing the distribution of simulated prices across
+            - Line chart with simulated price paths.
+            - Line chart with historical & simulated price paths.
+            - Histogram showing the distribution of simulated returns.
+            - Box plot showing the distribution of simulated prices across
                four evenly spaced points in time over the simulation.
-            5) Table displaying the contents of `self.summary_stats`.
+            - Table displaying the contents of `self.summary_stats`.
         """
         # Plot simulated price paths including an 80% confidence interval
         days = np.arange(self.T+1)  # x-axis
@@ -224,12 +225,12 @@ if __name__ == '__main__':
     # Instantiate the parser
     parser = argparse.ArgumentParser(description='Monte Carlo Simulation')
 
-    parser.add_argument('--days', '-d', type=int,
-                         help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.', default=252)
-    parser.add_argument('--iterations', '-i', type=int,
-                         help='Number of paths to simulate', default=1000)
-    parser.add_argument('--ticker', '-t', type=str,
-                         help='Stock ticker symbol of the stock to be simulated', default='ASML')
+    parser.add_argument('--days', '-d', type=positive_int, default=252,
+                         help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.')
+    parser.add_argument('--iterations', '-i', type=positive_int, default=1000,
+                         help='Number of paths to simulate')
+    parser.add_argument('--ticker', '-t', type=valid_ticker, default='ASML',
+                         help='Stock ticker symbol of the stock to be simulated. Must be alphanumeric')
     args = parser.parse_args()
     print(vars(args))
     
