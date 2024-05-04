@@ -67,19 +67,27 @@ class MonteCarlo:
         The CSV file should contain historical share prices with an 'Adj Close' header.
 
         Raises:
-            FileNotFoundError: If the csv file cannot be loaded.
-            KeyError: If the csv has no column called "Adj Close".
+            FileNotFoundError: If the CSV file cannot be loaded.
+            KeyError: If the CSV has no columns called 'Adj Close' and 'Date'.
         """
-        data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
+        # Try loading the CSV
         try:
+            data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
             self.df = pd.read_csv(data_path)
         except FileNotFoundError:
             raise FileNotFoundError(f'File {self.ticker}.csv was not found.')
         
+        # Try accessing the 'Adj Close' column
         try:
             self.adj_close = self.df['Adj Close'].values
         except KeyError:
             raise KeyError(f'Column "Adj Close" not found in {self.ticker}.csv.')
+        
+        # Try accessing the 'Date' column
+        try:
+            self.dates = pd.to_datetime(self.df['Date'].values)
+        except KeyError:
+            raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
 
     def simulate(self) -> None:
         """Performs the MonteCarlo simulation.
@@ -147,7 +155,7 @@ class MonteCarlo:
         visualization in `self.plot`.
 
         Raises:
-            KeyError: If `self.df` has no column called "Date".
+            KeyError: If `self.df` has no column called 'Date'.
         """
         # Compute prices and return metrics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
@@ -161,12 +169,8 @@ class MonteCarlo:
         self.pct_90 = np.percentile(self.price_paths, q=90, axis=1)
 
         # Compute date-related variables
-        try:
-            dates = pd.to_datetime(self.df['Date'].values)
-        except KeyError:
-            raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
         self.max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid displaying too much historical data
-        dates_axis = dates[-self.max_history:]
+        dates_axis = self.dates[-self.max_history:]
         self.simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
         self.combined_dates = np.concatenate((dates_axis, self.simulation_dates))  # combine historical and simulation horizon dates
 
