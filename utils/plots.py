@@ -175,7 +175,7 @@ def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
     plt.show()
     plt.clf()
 
-def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
+def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str, base_dir: Path) -> None:
     """Plot a table of summary statistics for simulated data.
 
     The table plotted consists of four sub-tables pertaining to sections:
@@ -187,6 +187,7 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     Args:
         statistics_df: DataFrame containing calculated statistics.
         ticker: The stock ticker symbol.
+        base_dir: The base directory where the box plot will be saved.
     """
     # Define colours
     edge_colour = 'white'
@@ -248,6 +249,7 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
 
     # Save figure in the repository's home directory
     plt.tight_layout()
-    plt.savefig(f'{ticker}_summary_statistics.png')
+    fig_savepath = base_dir / '..' / f'{ticker}_summary_statistics.png'
+    plt.savefig(fig_savepath)
     plt.show()
     plt.clf()

@@ -211,7 +211,7 @@ class MonteCarlo:
         plots.plot_box(self.price_paths, self.simulation_dates, self.T, base_dir=self.script_dir, ticker=self.ticker)
 
         # Save table of summary statistics as an image
-        plots.plot_summary_statistics(self.summary_stats, self.ticker)
+        plots.plot_summary_statistics(self.summary_stats, self.ticker, base_dir=self.script_dir)
 
 
 def main(args: argparse.Namespace) -> None:
