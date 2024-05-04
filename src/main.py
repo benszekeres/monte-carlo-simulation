@@ -85,7 +85,7 @@ class MonteCarlo:
         
         # Try accessing the 'Date' column
         try:
-            self.dates = pd.to_datetime(self.df['Date'].values, dayfirst=True)
+            self.dates = pd.to_datetime(self.df['Date'].values)
         except KeyError:
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
 
@@ -237,7 +237,6 @@ class MonteCarlo:
 
 
 def main(args: argparse.Namespace) -> None:
-    # monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
     try:
         monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
         monte_carlo.simulate()
