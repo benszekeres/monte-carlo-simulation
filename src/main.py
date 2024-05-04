@@ -125,18 +125,14 @@ class MonteCarlo:
     def compute_summary_statistics(self) -> None:
         """Computes statistics to summarise the simulation parameters and its outcomes.
 
-        The statistics computed are stored in a DataFrame `self.summary_stats`, 
-        and include the following metrics:
-            ...
-            mean_price: Mean prices on the last day of simulation.
-            min_price: Minimum price on the last day of simulation.
-            max_price: Maximum price on the last day of simulation.
-            pct_10, pct_25, pct_75, pct_90: The 10th, 25th, 75th and 90th percentile
-            prices calculated per day over the simulation.
-            var: Value at Risk (VaR) values for the specified confidence levels.
-            cvar: Conditional Value at Risk (CVaR) values for the specified confidence levels.
-        Some date-related variables are computed in this function, some of 
-        which are stored as class member variables for use in `self.plot`. 
+        The statistics are grouped into four categories: 
+            - 'Simulation Overview': Path counts, simulation dates, and time horizons.
+            - 'Price Statistics': Starting, mean, minimum, and maximum final prices.
+            - 'Return Metrics': Mean, minimum, and maximum returns.
+            - 'Risk Metrics': VaR and CVaR at specified confidence levels of 95% and 99%.
+
+        The summary statistics are stored as a class member DataFrame to facilitate
+        visualization in `self.plot`. 
         """
         # Compute prices and return metrics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
