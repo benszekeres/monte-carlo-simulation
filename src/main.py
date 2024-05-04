@@ -85,7 +85,7 @@ class MonteCarlo:
         
         # Try accessing the 'Date' column
         try:
-            self.dates = pd.to_datetime(self.df['Date'].values)
+            self.dates = pd.to_datetime(self.df['Date'].values, dayfirst=True)
         except KeyError:
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
 
