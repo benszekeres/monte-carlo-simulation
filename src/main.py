@@ -65,6 +65,10 @@ class MonteCarlo:
         The CSV file is expected to be named after a stock ticker symbol (`self.ticker`), 
         located in the `data` directory relative to the parent directory of the script.
         The CSV file should contain historical share prices with an 'Adj Close' header.
+
+        Raises:
+            FileNotFoundError: If the csv file cannot be loaded.
+            KeyError: If the csv has no column called "Adj Close".
         """
         data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
         try:
@@ -72,7 +76,10 @@ class MonteCarlo:
         except FileNotFoundError:
             raise FileNotFoundError(f'File {self.ticker}.csv was not found.')
         
-        self.adj_close = self.df['Adj Close'].values
+        try:
+            self.adj_close = self.df['Adj Close'].values
+        except KeyError:
+            raise KeyError(f'Column "Adj Close" not found in {self.ticker}.csv.')
 
     def simulate(self) -> None:
         """Performs the MonteCarlo simulation.
@@ -137,7 +144,10 @@ class MonteCarlo:
             - 'Risk Metrics': VaR and CVaR at specified confidence levels of 95% and 99%.
 
         The summary statistics are stored as a class member DataFrame to facilitate
-        visualization in `self.plot`. 
+        visualization in `self.plot`.
+
+        Raises:
+            KeyError: If `self.df` has no column called "Date".
         """
         # Compute prices and return metrics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
@@ -151,7 +161,10 @@ class MonteCarlo:
         self.pct_90 = np.percentile(self.price_paths, q=90, axis=1)
 
         # Compute date-related variables
-        dates = pd.to_datetime(self.df['Date'].values)
+        try:
+            dates = pd.to_datetime(self.df['Date'].values)
+        except KeyError:
+            raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
         self.max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid displaying too much historical data
         dates_axis = dates[-self.max_history:]
         self.simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
@@ -220,6 +233,7 @@ class MonteCarlo:
 
 
 def main(args: argparse.Namespace) -> None:
+    # monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
     try:
         monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
         monte_carlo.simulate()
