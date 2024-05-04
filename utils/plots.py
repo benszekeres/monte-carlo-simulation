@@ -191,7 +191,7 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     fig, ax = plt.subplots(figsize=FIG_SIZE)
     ax.axis('off')
 
-    # Calculate the number of rows needed (accounting for blank lines between sections)
+    # Calculate the number of rows needed
     total_rows = sum(1 + len(group) + 1
                       for _, group in statistics_df.groupby('Section'))  # +1 for header, +1 for empty rows
     row_height = 1.0 / total_rows  # height per row
@@ -199,33 +199,40 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     # Initialise variable to keep track of the current position within the overall table
     current_position = 0
 
-    # Iterate through each section
-    pass
+    # Iterate through each section and plot a table for it
+    for section, group in statistics_df.groupby('Section'):
+        num_rows = len(group) + 1  # +1 for header
+        section_height = num_rows * row_height
 
-    # table = ax.table(cellText=statistics_df.values,
-    #                  colLabels=statistics_df.columns,
-    #                  bbox=[0, 0, 1, 1],
-    #                  cellLoc='center',
-    #                  loc='center')
-    # table.auto_set_font_size(False)
+        # Plot a table for the given section
+        table = ax.table(cellText=group[['Metric', 'Value']].values,
+                         colLabels=['Metric', 'Value'],
+                         bbox=[0, current_position, 1, section_height],
+                         cellLoc='center',
+                         loc='bottom')
+        table.auto_set_font_size(False)
+        table.set_fontsize(12)
+        table.scale(1, 1.2)  # increase row heights
 
-    # # Make the column headers bold
-    # for (row_idx, _), cell in table.get_celld().items():
-    #     cell.set_edgecolor(edge_colour)
-    #     cell.set_height(0.1)  # adjust row height for all rows
-    #     if row_idx == 0:  # i.e. first row
-    #         cell.get_text().set_weight('bold')
-    #         cell.get_text().set_color(header_text_colour)
-    #         cell.set_facecolor(header_cell_colour)
-    #         cell.set_fontsize(13)
-    #     else:
-    #         is_shaded = row_idx % len(row_colors)
-    #         cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
-    #         cell.set_fontsize(12)
+        # Format the table
+        for (row_idx, col_idx), cell in table.get_celld().items():
+            cell.set_edgecolor(edge_colour)
+            if row_idx == 0:
+              cell.set_facecolor(header_cell_colour)
+              cell.get_text().set_color(header_text_colour)
+              cell.get_text().set_weight('bold')
+            else:
+                cell.set_facecolor(row_colors[row_idx % 2])  # shade every other row
 
-    # plt.tight_layout()
+        # Update current position in the overall plot
+        current_position += section_height
 
-    # # Save figure in the repository's home directory
-    # plt.savefig(f'{ticker}_summary_statistics.png')
-    # plt.show()
-    # plt.clf()
+        # Add empty row after each section (except after the last one)
+        if current_position < total_rows:
+            current_position += row_height
+
+    # Save figure in the repository's home directory
+    plt.tight_layout()
+    plt.savefig(f'{ticker}_summary_statistics.png')
+    plt.show()
+    plt.clf()
