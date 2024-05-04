@@ -84,13 +84,14 @@ class MonteCarlo:
         try:
             self.df['Adj Close'] = self.df['Adj Close'].replace(error_codes, np.nan)
             self.df = self.df.dropna()
-            self.df['Adj Close'] = pd.to_numeric(self.df['Adj Close'])
-            self.adj_close = self.df['Adj Close'].values
+            self.adj_close = pd.to_numeric(self.df['Adj Close']).values
         except KeyError:
             raise KeyError(f'Column "Adj Close" not found in {self.ticker}.csv.')
         
-        # Try accessing the 'Date' column
+        # Try accessing and cleaning the 'Date' column
         try:
+            self.df['Date'] = self.df['Date'].replace(error_codes, np.nan)
+            self.df = self.df.dropna()
             self.dates = pd.to_datetime(self.df['Date'].values, dayfirst=True)
         except KeyError:
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
