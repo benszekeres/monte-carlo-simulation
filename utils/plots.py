@@ -7,8 +7,9 @@ import seaborn as sns
 
 
 # Define and apply global constants for the sizes of plots
-FIG_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
-plt.rcParams['figure.figsize'] = FIG_SIZE
+CHART_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
+TABLE_SIZE = (8, 10)  # custom table size specified as inches
+plt.rcParams['figure.figsize'] = CHART_SIZE
 
 def plot_price_paths(days: np.ndarray,
                      pct_10: np.ndarray,
@@ -54,7 +55,7 @@ def plot_price_paths(days: np.ndarray,
     fig_savepath = base_dir / '..' / f'{ticker}_price_paths_shaded.png'
     plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
 
 def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
                                   max_history: int,
@@ -105,7 +106,7 @@ def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
     fig_savepath = base_dir / '..' / f'{ticker}_price_paths_with_history.png'
     plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
 
 def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> None:
     """Plot a histogram of simulated returns.
@@ -140,7 +141,7 @@ def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> 
     fig_savepath = base_dir / '..' / f'{ticker}_histogram_returns.png'
     plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
 
 def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
              T: int, base_dir: Path, ticker: str) -> None:
@@ -172,14 +173,21 @@ def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
     fig_savepath = base_dir / '..' / f'{ticker}_box_plot.png'
     plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
 
-def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
+def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str, base_dir: Path) -> None:
     """Plot a table of summary statistics for simulated data.
+
+    The table plotted consists of four sub-tables pertaining to sections:
+        - 'Simulation Overview': Path counts, simulation dates, and time horizons.
+        - 'Price Statistics': Starting, mean, minimum, and maximum final prices.
+        - 'Return Metrics': Mean, minimum, and maximum returns.
+        - 'Risk Metrics': VaR and CVaR at specified confidence levels of 95% and 99%.
 
     Args:
         statistics_df: DataFrame containing calculated statistics.
         ticker: The stock ticker symbol.
+        base_dir: The base directory where the box plot will be saved.
     """
     # Define colours
     edge_colour = 'white'
@@ -187,34 +195,61 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     header_text_colour = 'white'
     row_colors = ['white', 'lightgrey']  # every other row will be shaded
 
-    # Set a figure size that can accommodate the full table
-    _, ax = plt.subplots(figsize=FIG_SIZE)
-    ax.axis('tight')
+    # Initialise the figure and axis which will accommodate the entire table
+    fig, ax = plt.subplots(figsize=TABLE_SIZE)
     ax.axis('off')
-    table = ax.table(cellText=statistics_df.values,
-                     colLabels=statistics_df.columns,
-                     bbox=[0, 0, 1, 1],
-                     cellLoc='center',
-                     loc='center')
-    table.auto_set_font_size(False)
 
-    # Make the column headers bold
-    for (row_idx, _), cell in table.get_celld().items():
-        cell.set_edgecolor(edge_colour)
-        cell.set_height(0.1)  # adjust row height for all rows
-        if row_idx == 0:  # i.e. first row
-            cell.get_text().set_weight('bold')
-            cell.get_text().set_color(header_text_colour)
-            cell.set_facecolor(header_cell_colour)
-            cell.set_fontsize(13)
-        else:
-            is_shaded = row_idx % len(row_colors)
-            cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
-            cell.set_fontsize(12)
+    # Calculate the number of rows needed
+    total_rows = sum(1 + len(group) + 1
+                      for _, group in statistics_df.groupby('Section'))  # +1 for header, +1 for empty rows
+    row_height = 1.0 / total_rows  # height per row
 
-    plt.tight_layout()
+    # Initialise variable to keep track of the current position within the overall table
+    current_position = 0
+
+    # Define the order of the sections (in reverse, since first list item will be the bottom one)
+    section_order = ['Risk Metrics', 'Return Metrics', 'Share Prices', 'Simulation Overview']
+
+    # Convert the 'Section' column to a categorical type with the defined order
+    statistics_df['Section'] = pd.Categorical(statistics_df['Section'],
+                                               categories=section_order,
+                                               ordered=True)
+
+    # Iterate through each section and plot a table for it
+    for section, group in statistics_df.groupby('Section', observed=True):
+        num_rows = len(group) + 1  # +1 for header
+        section_height = num_rows * row_height
+
+        # Plot a table for the given section
+        table = ax.table(cellText=group[['Metric', 'Value']].values,
+                         colLabels=[section, ''],
+                         bbox=[0, current_position, 1, section_height],
+                         cellLoc='center',
+                         loc='bottom')
+        table.auto_set_font_size(False)
+        table.set_fontsize(12)
+        table.scale(1, 1.2)  # increase row heights
+
+        # Format the table
+        for (row_idx, col_idx), cell in table.get_celld().items():
+            cell.set_edgecolor(edge_colour)
+            if row_idx == 0:
+              cell.set_facecolor(header_cell_colour)
+              cell.get_text().set_color(header_text_colour)
+              cell.get_text().set_weight('bold')
+            else:
+                cell.set_facecolor(row_colors[row_idx % 2])  # shade every other row
+
+        # Update current position in the overall plot
+        current_position += section_height
+
+        # Add empty row after each section (except after the last one)
+        if current_position < total_rows:
+            current_position += row_height
 
     # Save figure in the repository's home directory
-    plt.savefig(f'{ticker}_summary_statistics.png')
+    plt.tight_layout()
+    fig_savepath = base_dir / '..' / f'{ticker}_summary_statistics.png'
+    plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
