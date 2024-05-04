@@ -183,29 +183,13 @@ class MonteCarlo:
             ]
         }
 
-        # Simulation overview
-        # data.append({'Metric': 'Number of Simulated Paths', 'Value': self.N})
-        # data.append({'Metric': 'Simulation Time Horizon', 'Value': f'{self.T} trading days'})
-        # data.append({'Metric': 'Simulation Start Date', 'Value': f'{self.simulation_dates[0].date()}'})
-        # data.append({'Metric': 'Simulation End Date', 'Value': f'{self.simulation_dates[-1].date()}'})
-
-        # Starting, mean, min, max simulated share prices
-        # data.append({'Metric': 'Starting Price', 'Value': f'{self.adj_close[-1]:.0f}'})
-        # data.append({'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.0f}'})
-        # data.append({'Metric': 'Min Final Price', 'Value': f'{self.min_price:.0f}'})
-        # data.append({'Metric': 'Max Final Price', 'Value': f'{self.max_price:.0f}'})
-
-        # Return metrics
-        # data.append({'Metric': f'Mean Return', 'Value': f'{mean_return:.1%}'})
-
-        # VaR and CVaR
-        # for thresh in self.confidence_thresh:
-        #     data.append({'Metric': f'VaR {int(thresh*100)}%', 'Value': f'{self.var[thresh]:.1%}'})
-        #     data.append({'Metric': f'CVaR {int(thresh*100)}%', 'Value': f'{self.cvar[thresh]:.1%}'})
+        # Convert into DataFrame
+        rows = []
+        for section, entries in data.items():
+            for entry in entries:
+                rows.append({**entry, 'Section': section})  # unpack dict and add section
+        self.summary_stats = pd.DataFrame(rows)
         
-        # Concatenate into a class member DataFrame
-        # self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
-
     def plot(self) -> None:
         """Plots various figures to visualise the simulation outcomes.
 
