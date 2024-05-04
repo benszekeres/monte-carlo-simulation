@@ -178,6 +178,12 @@ def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
 def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     """Plot a table of summary statistics for simulated data.
 
+    The table plotted consists of four sub-tables pertaining to sections:
+        - 'Simulation Overview': Path counts, simulation dates, and time horizons.
+        - 'Price Statistics': Starting, mean, minimum, and maximum final prices.
+        - 'Return Metrics': Mean, minimum, and maximum returns.
+        - 'Risk Metrics': VaR and CVaR at specified confidence levels of 95% and 99%.
+
     Args:
         statistics_df: DataFrame containing calculated statistics.
         ticker: The stock ticker symbol.
@@ -201,7 +207,7 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     current_position = 0
 
     # Define the order of the sections (in reverse, since first list item will be the bottom one)
-    section_order = ['Risk Metrics', 'Return Metrics', 'Price Statistics', 'Simulation Overview']
+    section_order = ['Risk Metrics', 'Return Metrics', 'Share Prices', 'Simulation Overview']
 
     # Convert the 'Section' column to a categorical type with the defined order
     statistics_df['Section'] = pd.Categorical(statistics_df['Section'],

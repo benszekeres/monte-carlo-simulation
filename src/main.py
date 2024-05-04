@@ -168,8 +168,8 @@ class MonteCarlo:
             ],
             'Return Metrics': [
                 {'Metric': f'Mean Return', 'Value': f'{mean_return:.1%}'},
-                {'Metric': f'Min Return / Max Loss', 'Value': f'{min_return:.1%}'},
-                {'Metric': f'Max Return / Min Loss', 'Value': f'{max_return:.1%}'}
+                {'Metric': f'Min Return', 'Value': f'{min_return:.1%}'},
+                {'Metric': f'Max Return', 'Value': f'{max_return:.1%}'}
             ],
             'Risk Metrics': [
                 {'Metric': f'VaR 95%', 'Value': f'{self.var[0.95]:.1%}'},
