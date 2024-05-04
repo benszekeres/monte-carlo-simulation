@@ -160,7 +160,7 @@ class MonteCarlo:
                 {'Metric': 'Simulation Start Date', 'Value': f'{self.simulation_dates[0].date()}'},
                 {'Metric': 'Simulation End Date', 'Value': f'{self.simulation_dates[-1].date()}'}
             ],
-            'Price Statistics': [
+            'Share Prices': [
                 {'Metric': 'Starting Price', 'Value': f'{self.adj_close[-1]:.0f}'},
                 {'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.0f}'},
                 {'Metric': 'Min Final Price', 'Value': f'{self.min_price:.0f}'},

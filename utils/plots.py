@@ -215,7 +215,7 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
 
         # Plot a table for the given section
         table = ax.table(cellText=group[['Metric', 'Value']].values,
-                         colLabels=['Metric', 'Value'],
+                         colLabels=[section, ''],
                          bbox=[0, current_position, 1, section_height],
                          cellLoc='center',
                          loc='bottom')
