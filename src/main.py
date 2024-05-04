@@ -77,8 +77,14 @@ class MonteCarlo:
         except FileNotFoundError:
             raise FileNotFoundError(f'File {self.ticker}.csv was not found.')
         
-        # Try accessing the 'Adj Close' column
+        # Define potential spreadsheet-related error codes that could exist in the CSV file
+        error_codes = ['#N/A', '#VALUE!', '#REF!', '#NAME?', '#DIV/0!', '#NULL!', '#NUM!']
+
+        # Try accessing and cleaning the 'Adj Close' column
         try:
+            self.df['Adj Close'] = self.df['Adj Close'].replace(error_codes, np.nan)
+            self.df = self.df.dropna()
+            self.df['Adj Close'] = pd.to_numeric(self.df['Adj Close'])
             self.adj_close = self.df['Adj Close'].values
         except KeyError:
             raise KeyError(f'Column "Adj Close" not found in {self.ticker}.csv.')
@@ -88,8 +94,6 @@ class MonteCarlo:
             self.dates = pd.to_datetime(self.df['Date'].values, dayfirst=True)
         except KeyError:
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
-        
-        # Additional error handling
 
     def simulate(self) -> None:
         """Performs the MonteCarlo simulation.
