@@ -200,8 +200,16 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     # Initialise variable to keep track of the current position within the overall table
     current_position = 0
 
+    # Define the order of the sections (in reverse, since first list item will be the bottom one)
+    section_order = ['Risk Metrics', 'Return Metrics', 'Price Statistics', 'Simulation Overview']
+
+    # Convert the 'Section' column to a categorical type with the defined order
+    statistics_df['Section'] = pd.Categorical(statistics_df['Section'],
+                                               categories=section_order,
+                                               ordered=True)
+
     # Iterate through each section and plot a table for it
-    for section, group in statistics_df.groupby('Section'):
+    for section, group in statistics_df.groupby('Section', observed=True):
         num_rows = len(group) + 1  # +1 for header
         section_height = num_rows * row_height
 
