@@ -67,7 +67,12 @@ class MonteCarlo:
         The CSV file should contain historical share prices with an 'Adj Close' header.
         """
         data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
-        self.df = pd.read_csv(data_path)
+        try:
+            self.df = pd.read_csv(data_path)
+        except FileNotFoundError:
+            raise FileNotFoundError(f'File {self.ticker}.csv was not found.')
+        
+        self.adj_close = self.df['Adj Close'].values
 
     def simulate(self) -> None:
         """Performs the MonteCarlo simulation.
@@ -78,7 +83,6 @@ class MonteCarlo:
         functions are called to compute VaR, CVaR, and summary statistics.
         """
         # Use the adjusted close price to compute log returns
-        self.adj_close = self.df['Adj Close'].values
         log_returns = np.log(self.adj_close[1:] / self.adj_close[:-1])
 
         # Compute mean and standard deviation of log returns
@@ -216,9 +220,13 @@ class MonteCarlo:
 
 
 def main(args: argparse.Namespace) -> None:
-    monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
-    monte_carlo.simulate()
-    monte_carlo.plot()
+    try:
+        monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
+        monte_carlo.simulate()
+        monte_carlo.plot()
+    except Exception as e:
+        print(f'An error has occcured: {e}')
+        sys.exit(1)
 
 
 if __name__ == '__main__':
@@ -228,9 +236,9 @@ if __name__ == '__main__':
     parser.add_argument('--days', '-d', type=positive_int, default=252,
                          help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.')
     parser.add_argument('--iterations', '-i', type=positive_int, default=1000,
-                         help='Number of paths to simulate')
+                         help='Number of paths to simulate.')
     parser.add_argument('--ticker', '-t', type=valid_ticker, default='ASML',
-                         help='Stock ticker symbol of the stock to be simulated. Must be alphanumeric')
+                         help='Stock ticker symbol of the stock to be simulated. Must be alphanumeric.')
     args = parser.parse_args()
     print(vars(args))
     
