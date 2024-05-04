@@ -16,7 +16,7 @@ def positive_int(value: str) -> int:
     """
     ivalue = int(value)
     if ivalue <= 0:
-        raise argparse.ArgumentTypeError(f'{value} is an invalid positive int value')
+        raise argparse.ArgumentTypeError(f'{value} is an invalid positive int value.')
     return ivalue
 
 # Define a validator that checks whether a ticker is an appropriate string
