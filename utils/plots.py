@@ -187,34 +187,45 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     header_text_colour = 'white'
     row_colors = ['white', 'lightgrey']  # every other row will be shaded
 
-    # Set a figure size that can accommodate the full table
-    _, ax = plt.subplots(figsize=FIG_SIZE)
-    ax.axis('tight')
+    # Initialise the figure and axis which will accommodate the entire table
+    fig, ax = plt.subplots(figsize=FIG_SIZE)
     ax.axis('off')
-    table = ax.table(cellText=statistics_df.values,
-                     colLabels=statistics_df.columns,
-                     bbox=[0, 0, 1, 1],
-                     cellLoc='center',
-                     loc='center')
-    table.auto_set_font_size(False)
 
-    # Make the column headers bold
-    for (row_idx, _), cell in table.get_celld().items():
-        cell.set_edgecolor(edge_colour)
-        cell.set_height(0.1)  # adjust row height for all rows
-        if row_idx == 0:  # i.e. first row
-            cell.get_text().set_weight('bold')
-            cell.get_text().set_color(header_text_colour)
-            cell.set_facecolor(header_cell_colour)
-            cell.set_fontsize(13)
-        else:
-            is_shaded = row_idx % len(row_colors)
-            cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
-            cell.set_fontsize(12)
+    # Calculate the number of rows needed (accounting for blank lines between sections)
+    total_rows = sum(1 + len(group) + 1
+                      for _, group in statistics_df.groupby('Section'))  # +1 for header, +1 for empty rows
+    row_height = 1.0 / total_rows  # height per row
 
-    plt.tight_layout()
+    # Initialise variable to keep track of the current position within the overall table
+    current_position = 0
 
-    # Save figure in the repository's home directory
-    plt.savefig(f'{ticker}_summary_statistics.png')
-    plt.show()
-    plt.clf()
+    # Iterate through each section
+    pass
+
+    # table = ax.table(cellText=statistics_df.values,
+    #                  colLabels=statistics_df.columns,
+    #                  bbox=[0, 0, 1, 1],
+    #                  cellLoc='center',
+    #                  loc='center')
+    # table.auto_set_font_size(False)
+
+    # # Make the column headers bold
+    # for (row_idx, _), cell in table.get_celld().items():
+    #     cell.set_edgecolor(edge_colour)
+    #     cell.set_height(0.1)  # adjust row height for all rows
+    #     if row_idx == 0:  # i.e. first row
+    #         cell.get_text().set_weight('bold')
+    #         cell.get_text().set_color(header_text_colour)
+    #         cell.set_facecolor(header_cell_colour)
+    #         cell.set_fontsize(13)
+    #     else:
+    #         is_shaded = row_idx % len(row_colors)
+    #         cell.set_facecolor(row_colors[is_shaded])  # 'lightgrey' if True
+    #         cell.set_fontsize(12)
+
+    # plt.tight_layout()
+
+    # # Save figure in the repository's home directory
+    # plt.savefig(f'{ticker}_summary_statistics.png')
+    # plt.show()
+    # plt.clf()
