@@ -55,7 +55,7 @@ def plot_price_paths(days: np.ndarray,
     fig_savepath = base_dir / '..' / f'{ticker}_price_paths_shaded.png'
     plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
 
 def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
                                   max_history: int,
@@ -106,7 +106,7 @@ def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
     fig_savepath = base_dir / '..' / f'{ticker}_price_paths_with_history.png'
     plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
 
 def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> None:
     """Plot a histogram of simulated returns.
@@ -141,7 +141,7 @@ def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> 
     fig_savepath = base_dir / '..' / f'{ticker}_histogram_returns.png'
     plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
 
 def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
              T: int, base_dir: Path, ticker: str) -> None:
@@ -173,7 +173,7 @@ def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
     fig_savepath = base_dir / '..' / f'{ticker}_box_plot.png'
     plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
 
 def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str, base_dir: Path) -> None:
     """Plot a table of summary statistics for simulated data.
@@ -252,4 +252,4 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str, base_dir: 
     fig_savepath = base_dir / '..' / f'{ticker}_summary_statistics.png'
     plt.savefig(fig_savepath)
     plt.show()
-    plt.clf()
+    plt.close()
