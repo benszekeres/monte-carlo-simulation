@@ -7,8 +7,9 @@ import seaborn as sns
 
 
 # Define and apply global constants for the sizes of plots
-FIG_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
-plt.rcParams['figure.figsize'] = FIG_SIZE
+CHART_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
+TABLE_SIZE = (8, 10)  # custom table size specified as inches
+plt.rcParams['figure.figsize'] = CHART_SIZE
 
 def plot_price_paths(days: np.ndarray,
                      pct_10: np.ndarray,
@@ -188,7 +189,7 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str) -> None:
     row_colors = ['white', 'lightgrey']  # every other row will be shaded
 
     # Initialise the figure and axis which will accommodate the entire table
-    fig, ax = plt.subplots(figsize=FIG_SIZE)
+    fig, ax = plt.subplots(figsize=TABLE_SIZE)
     ax.axis('off')
 
     # Calculate the number of rows needed
