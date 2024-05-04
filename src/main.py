@@ -123,10 +123,11 @@ class MonteCarlo:
             self.cvar[thresh] = np.mean(losses)
 
     def compute_summary_statistics(self) -> None:
-        """Computes statistics to summarise the simulation outcomes.
+        """Computes statistics to summarise the simulation parameters and its outcomes.
 
         The statistics computed are stored in a DataFrame `self.summary_stats`, 
         and include the following metrics:
+            ...
             mean_price: Mean prices on the last day of simulation.
             min_price: Minimum price on the last day of simulation.
             max_price: Maximum price on the last day of simulation.
@@ -141,7 +142,8 @@ class MonteCarlo:
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
         self.min_price = np.min(self.price_paths[-1])
         self.max_price = np.max(self.price_paths[-1])
-        mean_return = np.mean((self.price_paths[-1] - self.adj_close[-1]) / self.adj_close[-1])
+        returns = (self.price_paths[-1] - self.adj_close[-1]) / self.adj_close[-1]
+        mean_return, min_return, max_return = np.mean(returns), np.min(returns), np.max(returns)
         self.pct_10 = np.percentile(self.price_paths, q=10, axis=1)
         self.pct_25 = np.percentile(self.price_paths, q=25, axis=1)
         self.pct_75 = np.percentile(self.price_paths, q=75, axis=1)
@@ -154,31 +156,55 @@ class MonteCarlo:
         self.simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
         self.combined_dates = np.concatenate((dates_axis, self.simulation_dates))  # combine historical and simulation horizon dates
 
-        # Create summary statistics table
-        data = []
+        # Create summary statistics table with sections
+        data = {
+            'Simulation Overview': [
+                {'Metric': 'Number of Simulated Paths', 'Value': self.N},
+                {'Metric': 'Simulation Time Horizon', 'Value': f'{self.T} trading days'},
+                {'Metric': 'Simulation Start Date', 'Value': f'{self.simulation_dates[0].date()}'},
+                {'Metric': 'Simulation End Date', 'Value': f'{self.simulation_dates[-1].date()}'}
+            ],
+            'Price Statistics': [
+                {'Metric': 'Starting Price', 'Value': f'{self.adj_close[-1]:.0f}'},
+                {'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.0f}'},
+                {'Metric': 'Min Final Price', 'Value': f'{self.min_price:.0f}'},
+                {'Metric': 'Max Final Price', 'Value': f'{self.max_price:.0f}'}
+            ],
+            'Return Metrics': [
+                {'Metric': f'Mean Return', 'Value': f'{mean_return:.1%}'},
+                {'Metric': f'Min Return / Max Loss', 'Value': f'{min_return:.1%}'},
+                {'Metric': f'Max Return / Min Loss', 'Value': f'{max_return:.1%}'}
+            ],
+            'Risk Metrics': [
+                {'Metric': f'VaR 95%', 'Value': f'{self.var[0.95]:.1%}'},
+                {'Metric': f'CVaR 95%', 'Value': f'{self.cvar[0.95]:.1%}'},
+                {'Metric': f'VaR 99%', 'Value': f'{self.var[0.99]:.1%}'},
+                {'Metric': f'CVaR 99%', 'Value': f'{self.cvar[0.99]:.1%}'},
+            ]
+        }
 
         # Simulation overview
-        data.append({'Metric': 'Number of Simulated Paths', 'Value': self.N})
-        data.append({'Metric': 'Simulation Time Horizon', 'Value': f'{self.T} trading days'})
-        data.append({'Metric': 'Simulation Start Date', 'Value': f'{self.simulation_dates[0].date()}'})
-        data.append({'Metric': 'Simulation End Date', 'Value': f'{self.simulation_dates[-1].date()}'})
+        # data.append({'Metric': 'Number of Simulated Paths', 'Value': self.N})
+        # data.append({'Metric': 'Simulation Time Horizon', 'Value': f'{self.T} trading days'})
+        # data.append({'Metric': 'Simulation Start Date', 'Value': f'{self.simulation_dates[0].date()}'})
+        # data.append({'Metric': 'Simulation End Date', 'Value': f'{self.simulation_dates[-1].date()}'})
 
         # Starting, mean, min, max simulated share prices
-        data.append({'Metric': 'Starting Price', 'Value': f'{self.adj_close[-1]:.0f}'})
-        data.append({'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.0f}'})
-        data.append({'Metric': 'Min Final Price', 'Value': f'{self.min_price:.0f}'})
-        data.append({'Metric': 'Max Final Price', 'Value': f'{self.max_price:.0f}'})
+        # data.append({'Metric': 'Starting Price', 'Value': f'{self.adj_close[-1]:.0f}'})
+        # data.append({'Metric': 'Mean Final Price', 'Value': f'{self.mean_prices[-1]:.0f}'})
+        # data.append({'Metric': 'Min Final Price', 'Value': f'{self.min_price:.0f}'})
+        # data.append({'Metric': 'Max Final Price', 'Value': f'{self.max_price:.0f}'})
 
         # Return metrics
-        data.append({'Metric': f'Mean Return', 'Value': f'{mean_return:.1%}'})
+        # data.append({'Metric': f'Mean Return', 'Value': f'{mean_return:.1%}'})
 
         # VaR and CVaR
-        for thresh in self.confidence_thresh:
-            data.append({'Metric': f'VaR {int(thresh*100)}%', 'Value': f'{self.var[thresh]:.1%}'})
-            data.append({'Metric': f'CVaR {int(thresh*100)}%', 'Value': f'{self.cvar[thresh]:.1%}'})
+        # for thresh in self.confidence_thresh:
+        #     data.append({'Metric': f'VaR {int(thresh*100)}%', 'Value': f'{self.var[thresh]:.1%}'})
+        #     data.append({'Metric': f'CVaR {int(thresh*100)}%', 'Value': f'{self.cvar[thresh]:.1%}'})
         
         # Concatenate into a class member DataFrame
-        self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
+        # self.summary_stats = pd.concat([pd.DataFrame(data)], ignore_index=True)
 
     def plot(self) -> None:
         """Plots various figures to visualise the simulation outcomes.
