@@ -13,7 +13,7 @@ import sys
 # Append the project root directory to sys.path to import from utils
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from utils import plots
-from utils.helpers import positive_int
+from utils.helpers import positive_int, valid_ticker
 
 
 class MonteCarlo:
@@ -229,8 +229,8 @@ if __name__ == '__main__':
                          help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.')
     parser.add_argument('--iterations', '-i', type=positive_int, default=1000,
                          help='Number of paths to simulate')
-    parser.add_argument('--ticker', '-t', type=str, default='ASML',
-                         help='Stock ticker symbol of the stock to be simulated')
+    parser.add_argument('--ticker', '-t', type=valid_ticker, default='ASML',
+                         help='Stock ticker symbol of the stock to be simulated.')
     args = parser.parse_args()
     print(vars(args))
     
