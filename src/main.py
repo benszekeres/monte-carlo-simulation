@@ -225,12 +225,12 @@ if __name__ == '__main__':
     # Instantiate the parser
     parser = argparse.ArgumentParser(description='Monte Carlo Simulation')
 
-    parser.add_argument('--days', '-d', type=positive_int,
-                         help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.', default=252)
-    parser.add_argument('--iterations', '-i', type=positive_int,
-                         help='Number of paths to simulate', default=1000)
-    parser.add_argument('--ticker', '-t', type=str,
-                         help='Stock ticker symbol of the stock to be simulated', default='ASML')
+    parser.add_argument('--days', '-d', type=positive_int, default=252,
+                         help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.')
+    parser.add_argument('--iterations', '-i', type=positive_int, default=1000,
+                         help='Number of paths to simulate')
+    parser.add_argument('--ticker', '-t', type=str, default='ASML',
+                         help='Stock ticker symbol of the stock to be simulated')
     args = parser.parse_args()
     print(vars(args))
     
