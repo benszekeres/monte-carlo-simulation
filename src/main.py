@@ -85,9 +85,11 @@ class MonteCarlo:
         
         # Try accessing the 'Date' column
         try:
-            self.dates = pd.to_datetime(self.df['Date'].values)
+            self.dates = pd.to_datetime(self.df['Date'].values, dayfirst=True)
         except KeyError:
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
+        
+        # Additional error handling
 
     def simulate(self) -> None:
         """Performs the MonteCarlo simulation.
@@ -153,9 +155,6 @@ class MonteCarlo:
 
         The summary statistics are stored as a class member DataFrame to facilitate
         visualization in `self.plot`.
-
-        Raises:
-            KeyError: If `self.df` has no column called 'Date'.
         """
         # Compute prices and return metrics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
