@@ -64,7 +64,11 @@ class MonteCarlo:
 
         The CSV file is expected to be named after a stock ticker symbol (`self.ticker`), 
         located in the `data` directory relative to the parent directory of the script.
-        The CSV file should contain historical share prices with an 'Adj Close' header.
+        The CSV file should contain historical share prices under an 'Adj Close' header, 
+        as well as corresponding dates under a 'Date' header. 
+
+        Missing values in the 'Adj Close' series are populated via linear interpolation, 
+        while missing values in the 'Date' series are populated using a helper function.
 
         Raises:
             FileNotFoundError: If the CSV file cannot be loaded.
@@ -77,18 +81,66 @@ class MonteCarlo:
         except FileNotFoundError:
             raise FileNotFoundError(f'File {self.ticker}.csv was not found.')
         
-        # Try accessing the 'Adj Close' column
+        # Define potential spreadsheet-related error codes that could exist in the CSV file
+        error_codes = ['#N/A', '#VALUE!', '#REF!', '#NAME?', '#DIV/0!', '#NULL!', '#NUM!']
+
+        # Try accessing and cleaning the 'Adj Close' column, fill missing values with interpolation
         try:
-            self.adj_close = self.df['Adj Close'].values
+            self.df['Adj Close'] = self.df['Adj Close'].replace(error_codes, np.nan)
+            self.df['Adj Close'] = self.df['Adj Close'].interpolate()  # fill in NaNs
+            self.adj_close = pd.to_numeric(self.df['Adj Close']).values
         except KeyError:
             raise KeyError(f'Column "Adj Close" not found in {self.ticker}.csv.')
         
-        # Try accessing the 'Date' column
+        # Try accessing and cleaning the 'Date' column, fill in missing values if there are any
         try:
-            self.dates = pd.to_datetime(self.df['Date'].values)
+            self.df['Date'] = self.df['Date'].replace(error_codes, np.nan)
+            self.df['Date'] = pd.to_datetime(self.df['Date'].values, dayfirst=True)
+            self.dates = self.fill_dates(self.df['Date'])
         except KeyError:
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
+        
+    @staticmethod
+    def fill_dates(dates: pd.Series) -> pd.Series:
+        """Fills in the missing dates in a series, if there are any.
 
+        If the input series does not contain missing values, returns the original series unchanged.
+        If any missing values are present, returns a new series with all gaps filled, assuming
+        that each missing date is sequential by at least a single day.
+
+        Arguments:
+            dates: The range of dates that may include missing values.
+
+        Returns:
+            filled_dates: The range of dates without any gaps.
+        """
+        # If no missing dates exist, return `dates` unchanged
+        if not dates.isna().any():
+            return dates
+
+        # List to store the completed range of dates
+        filled_dates = []
+
+        dates = pd.to_datetime(dates)  # convert to DateTime if needed
+
+        # Iterate through the `dates` Series and fill in gaps
+        for i in range(len(dates) - 1):
+            current_date = dates.iat[i]
+
+            # If there is no gap, simply update `filled_dates` and continue
+            if not pd.isna(current_date):
+                filled_dates.append(current_date)
+                continue
+
+            # If there is a gap, increment `current_date` by one and update `filled_dates`
+            current_date += pd.Timedelta(days=1)
+            filled_dates.append(current_date)
+
+        # Append the last date
+        filled_dates.append(dates.iat[-1])
+
+        return pd.Series(filled_dates, dtype='datetime64[ns]')
+        
     def simulate(self) -> None:
         """Performs the MonteCarlo simulation.
 
@@ -153,9 +205,6 @@ class MonteCarlo:
 
         The summary statistics are stored as a class member DataFrame to facilitate
         visualization in `self.plot`.
-
-        Raises:
-            KeyError: If `self.df` has no column called 'Date'.
         """
         # Compute prices and return metrics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
@@ -171,7 +220,7 @@ class MonteCarlo:
         # Compute date-related variables
         self.max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid displaying too much historical data
         dates_axis = self.dates[-self.max_history:]
-        self.simulation_dates = pd.date_range(start=dates_axis[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
+        self.simulation_dates = pd.date_range(start=dates_axis.iat[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
         self.combined_dates = np.concatenate((dates_axis, self.simulation_dates))  # combine historical and simulation horizon dates
 
         # Create summary statistics table with sections
