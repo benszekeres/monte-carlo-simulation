@@ -84,6 +84,7 @@ class MonteCarlo:
             data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
             self.df = pd.read_csv(data_path)
         except FileNotFoundError:
+            logging.exception(f'File {self.ticker}.csv was not found.')
             raise FileNotFoundError(f'File {self.ticker}.csv was not found.')
         
         # Define potential spreadsheet-related error codes that could exist in the CSV file
@@ -95,6 +96,7 @@ class MonteCarlo:
             self.df['Adj Close'] = self.df['Adj Close'].interpolate()  # fill in NaNs
             self.adj_close = pd.to_numeric(self.df['Adj Close']).values
         except KeyError:
+            logging.exception(f'Column "Adj Close" not found in {self.ticker}.csv.')
             raise KeyError(f'Column "Adj Close" not found in {self.ticker}.csv.')
         
         # Try accessing and cleaning the 'Date' column, fill in missing values if there are any
@@ -103,6 +105,7 @@ class MonteCarlo:
             self.df['Date'] = pd.to_datetime(self.df['Date'].values, dayfirst=True)
             self.dates = self.fill_dates(self.df['Date'])
         except KeyError:
+            logging.exception(f'Column "Date" not found in {self.ticker}.csv.')
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
         
     @staticmethod
