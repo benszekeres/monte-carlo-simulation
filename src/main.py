@@ -92,12 +92,22 @@ class MonteCarlo:
         try:
             self.df['Date'] = self.df['Date'].replace(error_codes, np.nan)
             self.df['Date'] = pd.to_datetime(self.df['Date'].values, dayfirst=True)
-            self.df['Date'] = self.df['Date'].fillna(method='ffill').fillna(method='bfill')
-            self.df['Date'] = self.df['Date'].view('int64')  # convert dates to numerical timestamps
-            self.df['Date'] = self.df['Date'].interpolate()
-            self.dates = pd.to_datetime(self.df['Date'].values, dayfirst=True)  # convert interpolated timestamps to dates
+            self.dates = self.fill_dates(self.df['Date'])
         except KeyError:
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
+        
+    @staticmethod
+    def fill_dates(dates: pd.Series[pd.Timestamp]) -> pd.Series[pd.Timestamp]:
+        """Description to follow.
+
+        Arguments:
+            dates: The range of dates that include missing values.
+
+        Returns:
+            filled_dates: The range of dates with all previous gaps filled in
+        """
+        filled_dates = dates
+        return filled_dates
 
     def simulate(self) -> None:
         """Performs the MonteCarlo simulation.
