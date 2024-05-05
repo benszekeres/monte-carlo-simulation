@@ -5,15 +5,20 @@ Example use:
 """
 
 import argparse
-from pathlib import Path
+import logging
 import numpy as np
 import pandas as pd
+from pathlib import Path
 import sys
 
 # Append the project root directory to sys.path to import from utils
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from utils import plots
 from utils.helpers import positive_int, valid_ticker
+
+# Set up and configure logging
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+logging.getLogger('matplotlib').setLevel(logging.WARNING)
 
 
 class MonteCarlo:
@@ -291,7 +296,7 @@ def main(args: argparse.Namespace) -> None:
         monte_carlo.simulate()
         monte_carlo.plot()
     except Exception as e:
-        print(f'An error has occcured: {e}')
+        logging.error(f'An error has occcured: {e}. Exiting.')
         sys.exit(1)
 
 
@@ -306,7 +311,7 @@ if __name__ == '__main__':
     parser.add_argument('--ticker', '-t', type=valid_ticker, default='ASML',
                          help='Stock ticker symbol of the stock to be simulated. Must be alphanumeric.')
     args = parser.parse_args()
-    print(vars(args))
+    logging.info(vars(args))
     
     # Run main with the arguments passed
     main(args)
