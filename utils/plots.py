@@ -81,11 +81,16 @@ def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
         base_dir: The base directory where the plot image will be saved.
         ticker: The stock ticker symbol.
     """
-    plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4', label='Historical Share Price')
-    plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c', label='75th percentile')
-    plt.plot(combined_dates[max_history:], mean, linewidth=1.5, alpha=1, color='#ff7f0e', label='Mean')
-    plt.plot(combined_dates[max_history:], pct_25, linewidth=1.5, alpha=1, color='#d62728', label='25th percentile')
-    plt.fill_between(combined_dates[max_history:], pct_10, pct_90, color='gray', alpha=0.2, label='80% Confidence Interval')
+    plt.plot(combined_dates[:max_history], adj_close[-max_history:], alpha=1, color='#1f77b4',
+             label='Historical Share Price')
+    plt.plot(combined_dates[max_history:], pct_75, linewidth=1.5, alpha=1, color='#2ca02c',
+             label='75th percentile')
+    plt.plot(combined_dates[max_history:], mean, linewidth=1.5, alpha=1, color='#ff7f0e',
+             label='Mean')
+    plt.plot(combined_dates[max_history:], pct_25, linewidth=1.5, alpha=1, color='#d62728',
+             label='25th percentile')
+    plt.fill_between(combined_dates[max_history:], pct_10, pct_90, color='gray', alpha=0.2,
+                     label='80% Confidence Interval')
 
     # Configure axes' limits
     plt.xlim(left=combined_dates[0], right=combined_dates[-1])

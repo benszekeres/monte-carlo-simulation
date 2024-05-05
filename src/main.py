@@ -228,8 +228,11 @@ class MonteCarlo:
         # Compute date-related variables
         self.max_history = min(len(self.adj_close), (self.T+1)*3)  # avoid displaying too much historical data
         dates_axis = self.dates[-self.max_history:]
-        self.simulation_dates = pd.date_range(start=dates_axis.iat[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B')
-        self.combined_dates = np.concatenate((dates_axis, self.simulation_dates))  # combine historical and simulation horizon dates
+        self.simulation_dates = pd.date_range(
+            start=dates_axis.iat[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B'
+            )
+        # Combine historical and simulation horizon dates
+        self.combined_dates = np.concatenate((dates_axis, self.simulation_dates))  
 
         # Create summary statistics table with sections
         data = {
@@ -278,10 +281,14 @@ class MonteCarlo:
         """
         # Plot simulated price paths including an 80% confidence interval
         days = np.arange(self.T+1)  # x-axis
-        plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
+        plots.plot_price_paths(days, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90,
+                               base_dir=self.script_dir, ticker=self.ticker)
         
         # Plot both historical share price and simulated price paths
-        plots.plot_price_paths_with_history(self.combined_dates, self.max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices, self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker)
+        plots.plot_price_paths_with_history(
+            self.combined_dates, self.max_history, self.adj_close, self.pct_10, self.pct_25, self.mean_prices,
+            self.pct_75, self.pct_90, base_dir=self.script_dir, ticker=self.ticker
+            )
         
         # Plot histogram of simulated returns
         plots.plot_histogram(self.simulated_returns, self.N, base_dir=self.script_dir, ticker=self.ticker)
