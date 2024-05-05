@@ -5,15 +5,20 @@ Example use:
 """
 
 import argparse
-from pathlib import Path
+import logging
 import numpy as np
 import pandas as pd
+from pathlib import Path
 import sys
 
 # Append the project root directory to sys.path to import from utils
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from utils import plots
 from utils.helpers import positive_int, valid_ticker
+
+# Set up and configure logging
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+logging.getLogger('matplotlib').setLevel(logging.WARNING)
 
 
 class MonteCarlo:
@@ -79,6 +84,7 @@ class MonteCarlo:
             data_path = self.script_dir / '..' / 'data' / f'{self.ticker}.csv'
             self.df = pd.read_csv(data_path)
         except FileNotFoundError:
+            logging.exception(f'File {self.ticker}.csv was not found.')
             raise FileNotFoundError(f'File {self.ticker}.csv was not found.')
         
         # Define potential spreadsheet-related error codes that could exist in the CSV file
@@ -90,6 +96,7 @@ class MonteCarlo:
             self.df['Adj Close'] = self.df['Adj Close'].interpolate()  # fill in NaNs
             self.adj_close = pd.to_numeric(self.df['Adj Close']).values
         except KeyError:
+            logging.exception(f'Column "Adj Close" not found in {self.ticker}.csv.')
             raise KeyError(f'Column "Adj Close" not found in {self.ticker}.csv.')
         
         # Try accessing and cleaning the 'Date' column, fill in missing values if there are any
@@ -98,6 +105,7 @@ class MonteCarlo:
             self.df['Date'] = pd.to_datetime(self.df['Date'].values, dayfirst=True)
             self.dates = self.fill_dates(self.df['Date'])
         except KeyError:
+            logging.exception(f'Column "Date" not found in {self.ticker}.csv.')
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
         
     @staticmethod
@@ -291,7 +299,7 @@ def main(args: argparse.Namespace) -> None:
         monte_carlo.simulate()
         monte_carlo.plot()
     except Exception as e:
-        print(f'An error has occcured: {e}')
+        logging.error(f'An error has occcured: {e}. Exiting.')
         sys.exit(1)
 
 
@@ -306,7 +314,7 @@ if __name__ == '__main__':
     parser.add_argument('--ticker', '-t', type=valid_ticker, default='ASML',
                          help='Stock ticker symbol of the stock to be simulated. Must be alphanumeric.')
     args = parser.parse_args()
-    print(vars(args))
+    logging.info(vars(args))
     
     # Run main with the arguments passed
     main(args)
