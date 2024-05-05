@@ -1,4 +1,8 @@
 import argparse
+import logging
+
+# Set up and configure logging
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 
 
 # Define a validator function for command line arguments
@@ -16,6 +20,7 @@ def positive_int(value: str) -> int:
     """
     ivalue = int(value)
     if ivalue <= 0:
+        logging.exception(f'{value} is an invalid positive int value.')
         raise argparse.ArgumentTypeError(f'{value} is an invalid positive int value.')
     return ivalue
 
@@ -33,6 +38,6 @@ def valid_ticker(ticker: str) -> str:
         argparse.ArgumentTypeError: If the input string is not a valid stock ticker.
     """
     if not ticker.isalnum():
-        raise argparse.ArgumentTypeError(f"Invalid stock ticker. \
-                                          Stock tickers should be alphanumeric.")
+        logging.exception(f"Invalid stock ticker. Stock tickers should be alphanumeric.")
+        raise argparse.ArgumentTypeError(f"Invalid stock ticker. Stock tickers should be alphanumeric.")
     return ticker
