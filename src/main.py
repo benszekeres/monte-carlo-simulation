@@ -132,7 +132,7 @@ class MonteCarlo:
                 filled_dates.append(current_date)
                 continue
 
-            # If there is a gap, increment `current_date` by one and update 'filled_dates'
+            # If there is a gap, increment `current_date` by one and update `filled_dates`
             current_date += pd.Timedelta(days=1)
             filled_dates.append(current_date)
 
