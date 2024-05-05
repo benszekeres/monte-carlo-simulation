@@ -83,7 +83,7 @@ class MonteCarlo:
         # Try accessing and cleaning the 'Adj Close' column
         try:
             self.df['Adj Close'] = self.df['Adj Close'].replace(error_codes, np.nan)
-            self.df = self.df.dropna()
+            self.df['Adj Close'] = self.df['Adj Close'].interpolate()  # fill in NaNs
             self.adj_close = pd.to_numeric(self.df['Adj Close']).values
         except KeyError:
             raise KeyError(f'Column "Adj Close" not found in {self.ticker}.csv.')
@@ -91,8 +91,11 @@ class MonteCarlo:
         # Try accessing and cleaning the 'Date' column
         try:
             self.df['Date'] = self.df['Date'].replace(error_codes, np.nan)
-            self.df = self.df.dropna()
-            self.dates = pd.to_datetime(self.df['Date'].values, dayfirst=True)
+            self.df['Date'] = pd.to_datetime(self.df['Date'].values, dayfirst=True)
+            self.df['Date'] = self.df['Date'].fillna(method='ffill').fillna(method='bfill')
+            self.df['Date'] = self.df['Date'].view('int64')  # convert dates to numerical timestamps
+            self.df['Date'] = self.df['Date'].interpolate()
+            self.dates = pd.to_datetime(self.df['Date'].values, dayfirst=True)  # convert interpolated timestamps to dates
         except KeyError:
             raise KeyError(f'Column "Date" not found in {self.ticker}.csv.')
 
