@@ -25,7 +25,10 @@ For more details on the data used in this project, please see the README in the 
 - Python 3.8+
 
 ### Installation
-1. Clone the repo: [https://github.com/benszekeres/monte-carlo-simulation](https://github.com/benszekeres/monte-carlo-simulation)
+1. Clone the repo:
+```shell
+git clone https://github.com/benszekeres/monte-carlo-simulation
+```
 2. Install required packages:
 ```shell
 pip install -r requirements.txt
