@@ -39,7 +39,7 @@ The following are example results from running the simulation as follows:
 python src/main.py --ticker ASML.AS --iterations 1000 --days 252
 ```
 
-<img src="results/ASML.AS_summary_statistics.png" alt="Summary Statistics" width="800" height="1000">
+<img src="results/ASML.AS_summary_statistics.png" alt="Summary Statistics" width="640" height="800">
 ![Price Paths](results/ASML.AS_price_paths_shaded.png)
 ![Price Paths with History](results/ASML.AS_price_paths_with_history.png)
 ![Histogram of Returns](results/ASML.AS_histogram_returns.png)
