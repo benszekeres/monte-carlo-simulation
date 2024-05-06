@@ -5,9 +5,9 @@ This directory contains five CSV files with daily share price history downloaded
 
 Data is provided for the following five stocks:
  - ```ASML.AS.csv``` contains data for ```ASML Holding N.V.``` from 20/07/1998 to 03/05/2024 where share prices appear in ```EUR```
- - ```NESM.F.csv``` contains data for ```Nestlé S.A.``` from 22/05/2004 to 03/05/2024 where share prices appear in ```EUR```
- - ```NOVO-B.CO.csv``` contains data for ```Novo Nordisk A/S``` from 06/01/2001 to 03/05/2024 where share prices appear in ```DKK```
  - ```MC.PA.csv``` contains data for ```LVMH Moët Hennessy Louis Vuitton S.E.``` from 03/01/2000 to 03/05/2024 where share prices appear in ```EUR```
+ - ```NESN.SW.csv``` contains data for ```Nestlé S.A.``` from 03/01/1990 to 03/05/2024 where share prices appear in ```CHF```
+ - ```NOVO-B.CO.csv``` contains data for ```Novo Nordisk A/S``` from 06/01/2001 to 03/05/2024 where share prices appear in ```DKK```
  - ```SHEL.L.csv``` contains data for ```Shell plc``` from 29/08/1996 to 03/05/2024 where share prices appear in ```GBp```
 
 ## Source
