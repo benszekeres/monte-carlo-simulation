@@ -62,7 +62,7 @@ def plot_price_paths(days: np.ndarray,
     ax1.legend(loc='upper left')
 
     # Save plot in the repository's home directory
-    fig_savepath = base_dir / '..' / f'{ticker}_price_paths_shaded.png'
+    fig_savepath = base_dir / '../results' / f'{ticker}_price_paths_shaded.png'
     plt.savefig(fig_savepath)
     plt.show()
     plt.close()
@@ -119,7 +119,7 @@ def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
     ax1.legend(loc='upper left')
 
     # Save plot in the repository's home directory
-    fig_savepath = base_dir / '..' / f'{ticker}_price_paths_with_history.png'
+    fig_savepath = base_dir / '../results' / f'{ticker}_price_paths_with_history.png'
     plt.savefig(fig_savepath)
     plt.show()
     plt.close()
@@ -154,7 +154,7 @@ def plot_histogram(returns: np.ndarray, N: int, base_dir: Path, ticker: str) -> 
     ax.set_xlim(left=min_return, right=max_return)
 
     # Save plot in the repository's home directory
-    fig_savepath = base_dir / '..' / f'{ticker}_histogram_returns.png'
+    fig_savepath = base_dir / '../results' / f'{ticker}_histogram_returns.png'
     plt.savefig(fig_savepath)
     plt.show()
     plt.close()
@@ -187,7 +187,7 @@ def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
     plt.xticks(ticks=range(4), labels=month_ends)
 
     # Save plot in the repository's home directory
-    fig_savepath = base_dir / '..' / f'{ticker}_box_plot.png'
+    fig_savepath = base_dir / '../results' / f'{ticker}_box_plot.png'
     plt.savefig(fig_savepath)
     plt.show()
     plt.close()
@@ -272,7 +272,7 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str, base_dir: 
 
     # Save figure in the repository's home directory
     plt.tight_layout()
-    fig_savepath = base_dir / '..' / f'{ticker}_summary_statistics.png'
+    fig_savepath = base_dir / '../results/' / f'{ticker}_summary_statistics.png'
     plt.savefig(fig_savepath)
     plt.show()
     plt.close()
