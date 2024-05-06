@@ -40,10 +40,10 @@ python src/main.py --ticker ASML.AS --iterations 1000 --days 252
 ```
 
 <img src="results/ASML.AS_summary_statistics.png" alt="Summary Statistics" width="640" height="800">
-<img src="results/ASML.AS_price_paths_shaded" alt="Price Paths" width="711" height="400">
-<img src="results/ASML.AS_price_paths_with_history" alt="Price Paths with History" width="711" height="400">
-<img src="results/ASML.AS_histogram_returns" alt="Histogram of Returns" width="711" height="400">
-<img src="results/ASML.AS_box_plot" alt="Box Plot" width="711" height="400">
+<img src="results/ASML.AS_price_paths_shaded.png" alt="Price Paths" width="711" height="400">
+<img src="results/ASML.AS_price_paths_with_history.png" alt="Price Paths with History" width="711" height="400">
+<img src="results/ASML.AS_histogram_returns.png" alt="Histogram of Returns" width="711" height="400">
+<img src="results/ASML.AS_box_plot.png" alt="Box Plot" width="711" height="400">
 
 ## Contact
 Benjamin Szekeres – [benjamin.a.szekeres@gmail.com](mailto:benjamin.a.szekeres@gmail.com)
