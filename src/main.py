@@ -6,10 +6,11 @@ Example use:
 
 import argparse
 import logging
+import sys
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-import sys
 
 # Append the project root directory to sys.path to import from utils
 sys.path.append(str(Path(__file__).resolve().parent.parent))
