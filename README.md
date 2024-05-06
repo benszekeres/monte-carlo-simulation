@@ -12,11 +12,11 @@ TBC
 The Monte Carlo simulations in this project are based on historical share price data from **Yahoo Finance**. The data includes daily openings, closings, intraday highs and lows, and volume information.
 
 ### Stocks Included
-- **ASML Holding N.V. (ASML.AS)** - Data ranges from 20/07/1998 to 03/05/2024, share prices are in EUR.
-- **LVMH Moët Hennessy Louis Vuitton S.E. (MC.PA)** - Data ranges from 03/01/2000 to 03/05/2024, share prices are in EUR.
-- **Nestlé S.A. (NESN.SW)** - Data spans ranges 03/01/1990 to 03/05/2024, share prices are in CHF.
-- **Novo Nordisk A/S (NOVO-B.CO)** - Data ranges from 06/01/2001 to 03/05/2024, share prices are in DKK.
-- **Shell plc (SHEL.L)** - Data ranges from 29/08/1996 to 03/05/2024, share prices are in GBp.
+- **ASML Holding N.V. (```ASML.AS```)** - Historical data ranges from 20/07/1998 to 03/05/2024, share prices are in EUR.
+- **LVMH Moët Hennessy Louis Vuitton S.E. (```MC.PA```)** - Historical data ranges from 03/01/2000 to 03/05/2024, share prices are in EUR.
+- **Nestlé S.A. (```NESN.SW```)** - Historical data ranges 03/01/1990 to 03/05/2024, share prices are in CHF.
+- **Novo Nordisk A/S (```NOVO-B.CO```)** - Historical data ranges from 06/01/2001 to 03/05/2024, share prices are in DKK.
+- **Shell plc (```SHEL.L```)** - Historical data ranges from 29/08/1996 to 03/05/2024, share prices are in GBp.
 
 For more details on the data used in this project, please see the README in the [data directory](data/README.md).
 
