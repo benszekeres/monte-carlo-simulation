@@ -5,7 +5,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 
 
-# Define a validator function for command line arguments
+# Define a validator that checks whether the integer-converted representation of a string is positive
 def positive_int(value: str) -> int:
     """Converts a string to an integer and checks whether it is positive.
 
@@ -44,6 +44,6 @@ def valid_ticker(ticker: str) -> str:
     """
     ticker_to_check = ticker.replace('.', '').replace('-', '')
     if not ticker_to_check.isalnum():
-        logging.exception(f"Invalid stock ticker. Stock tickers should be alphanumeric.")
-        raise argparse.ArgumentTypeError(f"Invalid stock ticker. Stock tickers should be alphanumeric.")
+        logging.exception(f'Invalid stock ticker. Stock tickers should be alphanumeric.')
+        raise argparse.ArgumentTypeError(f'Invalid stock ticker. Stock tickers should be alphanumeric.')
     return ticker
