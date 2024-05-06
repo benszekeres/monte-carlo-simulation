@@ -40,6 +40,11 @@ Run the simulation:
 python src/main.py --ticker <stock_ticker> --iterations <num_price_paths> --days <num_trading_days>
 ```
 
+Example run:
+```shell
+python src/main.py --ticker ASML.AS --iterations 1000 --days 252
+```
+
 ## Results
 The following are example results from running the simulation as follows:
 ```shell
