@@ -220,7 +220,7 @@ class MonteCarlo:
             - 'Risk Metrics': VaR and CVaR at specified confidence levels of 95% and 99%.
 
         The summary statistics are stored as a class member DataFrame to facilitate
-        visualization in `self.plot`.
+        visualisation in `self.plot`.
         """
         # Compute prices and return metrics
         self.mean_prices = np.mean(self.price_paths, axis=1)  # has shape T+1 i.e. mean price per day
