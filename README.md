@@ -4,7 +4,9 @@
 This project implements a simple Monte Carlo simulation to forecast future share prices using historical data.
 
 ## Features
-TBC
+- Simulate the share price of a stock using a Monte Carlo simulation.
+- Specify the number of future trading days over which to simulate, and the number of simulation paths to use.
+- Output statistical summaries and visualizations of potential future share prices.
 
 ## Data Sources
 
