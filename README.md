@@ -6,7 +6,7 @@ This project implements a simple Monte Carlo simulation to forecast future share
 ## Features
 - Simulate the share price of a stock using a Monte Carlo simulation.
 - Specify the number of future trading days over which to simulate, and the number of simulation paths to use.
-- Output statistical summaries and visualizations of potential future share prices.
+- Output statistical summaries and visualisations of potential future share prices.
 
 ## Data Sources
 
@@ -30,7 +30,7 @@ The Monte Carlo simulation implemented in this project assumes that share price 
 ### Mathematical Model
 The simulation uses historical price data to:
 - **Compute Logarithmic Returns**: Calculate the log returns from the historical adjusted close prices.
-- **Apply Geometric Brownian Motion (GBM)**: Simulate future stock prices assuming that price movements are modeled by a GBM, which is characterized by continuous compounding returns influenced by stochastic drift and volatility factors.
+- **Apply Geometric Brownian Motion (GBM)**: Simulate future stock prices assuming that price movements are modeled by a GBM, which is characterised by continuous compounding returns influenced by stochastic drift and volatility factors.
 - **Simulate Price Paths**: Generate multiple price paths to forecast future price behavior and assess potential financial outcomes.
 
 ### Risk Metrics
