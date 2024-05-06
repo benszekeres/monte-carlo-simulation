@@ -309,7 +309,7 @@ class MonteCarlo:
 
 
 def main(args: argparse.Namespace) -> None:
-    """Executed the Monte Carlo simulation for share price forecasting.
+    """Executes the Monte Carlo simulation for share price forecasting.
 
     This function initializes the MonteCarlo class with user-provided arguments,
     runs the simulation, and then plots the results. It handles any exceptions that
