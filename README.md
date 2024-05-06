@@ -22,6 +22,22 @@ The Monte Carlo simulations in this project are based on historical share price 
 
 For more details on the data used in this project, please see the README in the [data directory](data/README.md).
 
+## Simulation Methodology
+
+### Log-Normal Returns
+The Monte Carlo simulation implemented in this project assumes that share price returns follow a log-normal distribution.
+
+### Mathematical Model
+The simulation uses historical price data to:
+- **Compute Logarithmic Returns**: Calculate the log returns from the historical adjusted close prices.
+- **Apply Geometric Brownian Motion (GBM)**: Simulate future stock prices assuming that price movements are modeled by a GBM, which is characterized by continuous compounding returns influenced by stochastic drift and volatility factors.
+- **Simulate Price Paths**: Generate multiple price paths to forecast future price behavior and assess potential financial outcomes.
+
+### Risk Metrics
+Included in the simulation are calculations of risk metrics such as:
+- **Value at Risk (VaR)**: Estimates the maximum loss expected over a set time period at confidence levels of 95% and 99%.
+- **Conditional Value at Risk (CVaR)**: Computes the mean loss assuming that losses exceed the VaR thresholds, providing insight into potential tail risks.
+
 ## Getting Started
 ### Prerequisites
 - Python 3.8+
