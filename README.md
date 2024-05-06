@@ -9,7 +9,7 @@ TBC
 ## Data Sources
 
 ### Share Price Data
-The Monte Carlo simulations in this project are based on historical share price data from **Yahoo Finance**. The data includes daily openings, closings, intraday highs and lows, and volume information.
+The Monte Carlo simulations in this project are based on historical share price data from **[Yahoo Finance](https://uk.finance.yahoo.com/)**. The data includes daily openings, closings, intraday highs and lows, and volume information.
 
 ### Stocks Included
 - **ASML Holding N.V. (```ASML.AS```)** - Historical data ranges from 20/07/1998 to 03/05/2024, share prices are in EUR.
