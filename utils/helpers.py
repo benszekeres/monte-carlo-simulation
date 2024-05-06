@@ -28,9 +28,10 @@ def positive_int(value: str) -> int:
 def valid_ticker(ticker: str) -> str:
     """Checks whether a ticker is a valid string. 
 
-    A ticker is a valid string if, once replacing any `.` characters, it is alphanumeric.
-    The reason that dots are allowed is because the stock tickers themselves contain one,
-    used as a separator between the stock ticker symbol and the exchange suffix.
+    A ticker is a valid string if, once replacing any `.` and `-` characters, it is alphanumeric.
+    The reason that dots are allowed is because the stock tickers contain one, used as a
+    separator between the stock ticker symbol and the exchange suffix. While a dash `-` is
+    arguably less common in stock tickers, some such as `NOVO-B.CO` still contain one. 
 
     Args:
         ticker: The ticker of the stock to be used in the simulation.
@@ -41,7 +42,7 @@ def valid_ticker(ticker: str) -> str:
     Raises:
         argparse.ArgumentTypeError: If the input string is not a valid stock ticker.
     """
-    ticker_to_check = ticker.replace('.', '')
+    ticker_to_check = ticker.replace('.', '').replace('-', '')
     if not ticker_to_check.isalnum():
         logging.exception(f"Invalid stock ticker. Stock tickers should be alphanumeric.")
         raise argparse.ArgumentTypeError(f"Invalid stock ticker. Stock tickers should be alphanumeric.")
