@@ -1,14 +1,17 @@
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import numpy as np
 import pandas as pd
-from pathlib import Path
 import seaborn as sns
 
 
-# Define and apply global constants for the sizes of plots
+# Define global constants for plot sizes
 CHART_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
 TABLE_SIZE = (8, 10)  # custom table size specified as inches
+
+# Apply global plot size settings to matplotlib
 plt.rcParams['figure.figsize'] = CHART_SIZE
 
 # Define a dictionary that maps the exchange on which a given stock is listed to its share price currency

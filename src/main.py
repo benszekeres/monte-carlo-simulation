@@ -6,10 +6,11 @@ Example use:
 
 import argparse
 import logging
+import sys
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-import sys
 
 # Append the project root directory to sys.path to import from utils
 sys.path.append(str(Path(__file__).resolve().parent.parent))
@@ -308,7 +309,7 @@ class MonteCarlo:
 
 
 def main(args: argparse.Namespace) -> None:
-    """Executed the Monte Carlo simulation for share price forecasting.
+    """Executes the Monte Carlo simulation for share price forecasting.
 
     This function initializes the MonteCarlo class with user-provided arguments,
     runs the simulation, and then plots the results. It handles any exceptions that
