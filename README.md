@@ -22,7 +22,7 @@ For more details on the data used in this project, please see the README in the 
 
 ## Getting Started
 ### Prerequisites
-TBC
+- Python 3.8+
 
 ### Installation
 TBC
