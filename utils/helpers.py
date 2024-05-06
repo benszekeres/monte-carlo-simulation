@@ -44,6 +44,6 @@ def valid_ticker(ticker: str) -> str:
     """
     ticker_to_check = ticker.replace('.', '').replace('-', '')
     if not ticker_to_check.isalnum():
-        logging.exception(f"Invalid stock ticker. Stock tickers should be alphanumeric.")
-        raise argparse.ArgumentTypeError(f"Invalid stock ticker. Stock tickers should be alphanumeric.")
+        logging.exception(f'Invalid stock ticker. Stock tickers should be alphanumeric.')
+        raise argparse.ArgumentTypeError(f'Invalid stock ticker. Stock tickers should be alphanumeric.')
     return ticker
