@@ -39,23 +39,23 @@ The following are example results from running the simulation as follows:
 python src/main.py --ticker ASML.AS --iterations 1000 --days 252
 ```
 
-*Figure 1: Summary of a Monte Carlo simulation for ASML.AS over 252 trading days and 1000 price paths*
+**Figure 1: Summary of a Monte Carlo simulation for ASML.AS over 252 trading days and 1000 price paths**
 
 <img src="results/ASML.AS_summary_statistics.png" alt="Summary Statistics" width="640" height="800">
 
-*Figure 2: Future price paths predicted by the Monte Carlo simulation*
+**Figure 2: Future price paths predicted by the Monte Carlo simulation**
 
 <img src="results/ASML.AS_price_paths_shaded.png" alt="Price Paths" width="711" height="400">
 
-*Figure 3: Historical and future price paths predicted by the Monte Carlo simulation*
+**Figure 3: Historical and future price paths predicted by the Monte Carlo simulation**
 
 <img src="results/ASML.AS_price_paths_with_history.png" alt="Price Paths with History" width="711" height="400">
 
-*Figure 4: Distribution of returns from the Monte Carlo simulation*
+**Figure 4: Distribution of returns from the Monte Carlo simulation**
 
 <img src="results/ASML.AS_histogram_returns.png" alt="Histogram of Returns" width="711" height="400">
 
-*Figure 5: Box plot of the Monte Carlo simulation at four chosen dates*
+**Figure 5: Box plot of the Monte Carlo simulation at four chosen dates**
 
 <img src="results/ASML.AS_box_plot.png" alt="Box Plot" width="711" height="400">
 
