@@ -214,7 +214,7 @@ class MonteCarlo:
 
         The statistics are grouped into four categories: 
             - 'Simulation Overview': Path counts, simulation dates, and time horizons.
-            - 'Price Statistics': Starting, mean, minimum, and maximum final prices.
+            - 'Share Prices': Starting, mean, minimum, and maximum final prices.
             - 'Return Metrics': Mean, minimum, and maximum returns.
             - 'Risk Metrics': VaR and CVaR at specified confidence levels of 95% and 99%.
 
