@@ -102,7 +102,7 @@ class MonteCarlo:
         # Try accessing and cleaning the 'Date' column, fill in missing values if there are any
         try:
             self.df['Date'] = self.df['Date'].replace(error_codes, np.nan)
-            self.df['Date'] = pd.to_datetime(self.df['Date'].values, dayfirst=True)
+            self.df['Date'] = pd.to_datetime(self.df['Date'].values)
             self.dates = self.fill_dates(self.df['Date'])
         except KeyError:
             logging.exception(f'Column "Date" not found in {self.ticker}.csv.')
