@@ -1,7 +1,7 @@
-"""This module implements the Monte Carlo simulation for the stock price of ASML.
+"""This module implements a simple Monte Carlo simulation.
 
 Example use:
-    python3 main.py
+    python main.py --ticker ASML.AS --iterations 1000 --days 252
 """
 
 import argparse
@@ -31,6 +31,9 @@ class MonteCarlo:
         script_dir (Path): The absolute path to the current script directory.
         df (pd.DataFrame): DataFrame holding the share price data.
         adj_close (np.ndarray): Adjusted close prices extracted from `df`.
+        dates (pd.Series): The dates pertaining to closing prices, extracted from `df`.
+        mean (float): Mean of the historical logarithmic returns computed from `adj_close`.
+        sigma (float): Standard deviation of the historical logarithmic returns computed from `adj_close`.
         price_paths (np.ndarray): Simulated price paths for the stock.
         simulated_returns (np.ndarray): Simulated returns from all price paths.
         var (dict[float, float]): Value at Risk (VaR) values for the specified confidence levels.
@@ -44,6 +47,10 @@ class MonteCarlo:
         pct_25 (np.ndarray): 25th percentile prices calculated per day over the simulation.
         pct_75 (np.ndarray): 75th percentile prices calculated per day over the simulation.
         pct_90 (np.ndarray): 90th percentile prices calculated per day over the simulation.
+        max_history (int): Maximum share price history to display during plotting.
+        simulation_dates (pd.Series): The future dates encompassed by the simulation time horizon.
+        combined_dates (np.ndarray): The combined range of historical and simulated dates to plot. 
+        summary_stats (pd.DataFrame): A variety of simulation-related summary metrics. 
     """
 
     def __init__(self, T: int, N: int, ticker: str) -> None:
@@ -232,7 +239,7 @@ class MonteCarlo:
             start=dates_axis.iat[-1] + pd.Timedelta(days=1), periods=self.T+1, freq='B'
             )
         # Combine historical and simulation horizon dates
-        self.combined_dates = np.concatenate((dates_axis, self.simulation_dates))  
+        self.combined_dates = np.concatenate((dates_axis, self.simulation_dates))
 
         # Create summary statistics table with sections
         data = {
