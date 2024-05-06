@@ -11,6 +11,15 @@ CHART_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
 TABLE_SIZE = (8, 10)  # custom table size specified as inches
 plt.rcParams['figure.figsize'] = CHART_SIZE
 
+# Define a dictionary that maps the exchange on which a given stock is listed to its share price currency
+CURRENCIES = {
+    'AS': 'EUR',  # Euronext Amsterdam
+    'CO': 'DKK',  # Copenhagen Stock Exchange
+    'L': 'GBp',   # London Stock Exchange (GBp stands for Great British Pence)
+    'PA': 'EUR',  # Euronext Paris
+    'SW': 'CHF'   # SIX Swiss Exchange
+}
+
 def plot_price_paths(days: np.ndarray,
                      pct_10: np.ndarray,
                      pct_25: np.ndarray,
