@@ -318,7 +318,7 @@ if __name__ == '__main__':
                          help='Number of future trading days to simulate. Defaults to one 252 reflecting one year.')
     parser.add_argument('--iterations', '-i', type=positive_int, default=1000,
                          help='Number of paths to simulate.')
-    parser.add_argument('--ticker', '-t', type=valid_ticker, default='ASML',
+    parser.add_argument('--ticker', '-t', type=valid_ticker, default='ASML.AS',
                          help='Stock ticker symbol of the stock to be simulated. Must be alphanumeric.')
     args = parser.parse_args()
     logging.info(vars(args))
