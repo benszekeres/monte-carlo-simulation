@@ -308,6 +308,22 @@ class MonteCarlo:
 
 
 def main(args: argparse.Namespace) -> None:
+    """Executed the Monte Carlo simulation for share price forecasting.
+
+    This function initializes the MonteCarlo class with user-provided arguments,
+    runs the simulation, and then plots the results. It handles any exceptions that
+    occur during the simulation process by logging the error and exiting the program.
+
+    Args:
+        args: Command line arguments passed to the script.
+            - days (int): The number of future trading days to simulate.
+            - iterations (int): The number of simulation paths to generate.
+            - ticker (str): The stock ticker symbol to simulate.
+
+    Raises:
+        Exception: Catches and logs any exceptions that occur during the simulation,
+                   then exits the program with a status code of 1.
+    """
     try:
         monte_carlo = MonteCarlo(T=args.days, N=args.iterations, ticker=args.ticker)
         monte_carlo.simulate()
