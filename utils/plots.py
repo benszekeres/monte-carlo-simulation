@@ -263,7 +263,7 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str, base_dir: 
             else:
                 cell.set_facecolor(row_colors[row_idx % 2])  # shade every other row
                 # If the given entry is a share price then add its currency
-                if section == 'Share Prices':
+                if section == 'Share Prices' and col_idx == 1:
                     cell.get_text().set_text(f'{cell.get_text().get_text()} ({currency})')
 
         # Update current position in the overall plot
