@@ -39,7 +39,11 @@ The following are example results from running the simulation as follows:
 python src/main.py --ticker ASML.AS --iterations 1000 --days 252
 ```
 
+![Summary Statistics](results/ASML.AS_summary_statistics.png)
 ![Price Paths](results/ASML.AS_price_paths_shaded.png)
+![Price Paths with History](results/ASML.AS_price_paths_with_history.png)
+![Histogram of Returns](results/ASML.AS_histogram_returns.png)
+![Box Plot](results/ASML.AS_box_plot.png)
 
 ## Contact
 Benjamin Szekeres – [benjamin.a.szekeres@gmail.com](mailto:benjamin.a.szekeres@gmail.com)
