@@ -11,6 +11,15 @@ CHART_SIZE = (8, 4.5)  # downsized 16:9 aspect ratio specified as inches
 TABLE_SIZE = (8, 10)  # custom table size specified as inches
 plt.rcParams['figure.figsize'] = CHART_SIZE
 
+# Define a dictionary that maps the exchange on which a given stock is listed to its share price currency
+CURRENCIES = {
+    'AS': 'EUR',  # Euronext Amsterdam
+    'CO': 'DKK',  # Copenhagen Stock Exchange
+    'L': 'GBp',   # London Stock Exchange (GBp stands for Great British Pence)
+    'PA': 'EUR',  # Euronext Paris
+    'SW': 'CHF'   # SIX Swiss Exchange
+}
+
 def plot_price_paths(days: np.ndarray,
                      pct_10: np.ndarray,
                      pct_25: np.ndarray,
@@ -48,7 +57,8 @@ def plot_price_paths(days: np.ndarray,
     # Set labels and legend
     plt.title(f'{ticker.upper()} Simulated Share Price Paths')
     ax1.set_xlabel('Trading days into the Future')
-    ax1.set_ylabel('Share Price')
+    currency = CURRENCIES[ticker.split('.')[-1]]
+    ax1.set_ylabel(f'Share Price ({currency})')
     ax1.legend(loc='upper left')
 
     # Save plot in the repository's home directory
@@ -104,7 +114,8 @@ def plot_price_paths_with_history(combined_dates: pd.DatetimeIndex,
     # Set labels and legend
     plt.title(f'{ticker.upper()} Share Prices: Historical & Simulated')
     ax1.set_xlabel('Date')
-    ax1.set_ylabel('Share Price')
+    currency = CURRENCIES[ticker.split('.')[-1]]
+    ax1.set_ylabel(f'Share Price ({currency})')
     ax1.legend(loc='upper left')
 
     # Save plot in the repository's home directory
@@ -171,7 +182,8 @@ def plot_box(price_paths: np.ndarray, simulation_dates: pd.DatetimeIndex,
     sns.boxplot(data=tp_prices)
     plt.title(f'Box Plot of {ticker.upper()} Simulated Share Prices at Selected Time Points')
     plt.xlabel('Nearest Month End')
-    plt.ylabel('Share Price')
+    currency = CURRENCIES[ticker.split('.')[-1]]
+    plt.ylabel(f'Share Price ({currency})')
     plt.xticks(ticks=range(4), labels=month_ends)
 
     # Save plot in the repository's home directory
@@ -235,6 +247,9 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str, base_dir: 
         table.set_fontsize(12)
         table.scale(1, 1.2)  # increase row heights
 
+        # Obtain the currency for the given stock to add to the share prices appearing in the table
+        currency = CURRENCIES[ticker.split('.')[-1]]
+
         # Format the table
         for (row_idx, col_idx), cell in table.get_celld().items():
             cell.set_edgecolor(edge_colour)
@@ -244,6 +259,9 @@ def plot_summary_statistics(statistics_df: pd.DataFrame, ticker: str, base_dir: 
               cell.get_text().set_weight('bold')
             else:
                 cell.set_facecolor(row_colors[row_idx % 2])  # shade every other row
+                # If the given entry is a share price then add its currency
+                if section == 'Share Prices':
+                    cell.get_text().set_text(f'{cell.get_text().get_text()} ({currency})')
 
         # Update current position in the overall plot
         current_position += section_height
