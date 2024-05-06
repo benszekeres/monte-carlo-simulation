@@ -46,8 +46,22 @@ Included in the simulation are calculations of risk metrics such as:
 1. Clone the repo:
 ```shell
 git clone https://github.com/benszekeres/monte-carlo-simulation
+cd monte-carlo-simulation
 ```
-2. Install required packages:
+
+2. Set up a virtual environment
+ - On macOS and Linux:
+ ```shell
+ python3 -m venv env
+ source env/bin/activate
+ ```
+ - On Windows:
+ ```shell
+ python3 -m venv env
+ .\env\Scripts\activate
+ ```
+
+3. Install required packages:
 ```shell
 pip install -r requirements.txt
 ```
